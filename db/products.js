@@ -76,7 +76,7 @@ async function getProductByName(productName) {
   }
 }
 
-async function updateProduct({ productId, ...fields }) {
+async function updateProduct(productId, fields = {}) {
   const setString = Object.keys(fields)
     .map((key, index) => `"${key}"=$${index + 1}`)
     .join(", ");
@@ -123,7 +123,6 @@ async function deleteProduct(productId) {
 }
 
 //user side
-
 
 module.exports = {
   createProduct,

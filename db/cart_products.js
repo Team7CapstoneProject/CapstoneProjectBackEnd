@@ -1,5 +1,6 @@
 const client = require("./client");
 
+
 async function deleteProductFromCart(productId) {
   try {
     await client.query(`
