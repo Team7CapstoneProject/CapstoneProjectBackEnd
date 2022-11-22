@@ -1,4 +1,29 @@
-const { client } = require("./index")
+const { client, createUser, createProduct } = require("./index")
+
+//function for making our test admin % regular user
+async function createInitialUsers() {
+    try {
+        console.log("Starting to create users...");
+        const admin = await createUser({first_name: 'admin', last_name: 'admin', password: 'admin', email: 'admin@gmail.com', is_admin: true});
+        const user = await createUser({first_name: 'user', last_name: 'user', password: 'user', email: 'user@gmail.com', is_admin: false});
+        console.log("Finished creating users!");
+    } catch (error) {
+        console.error("Error creating users!");
+        throw error;
+    }
+}
+
+//function for making mock products for testing
+async function createInitialProducts() {
+    try {
+        console.log("Starting to create products...");
+        const guitar = await createProduct({name: 'guitar', description: 'test', price: 100.00, image_url: 'www.testurl.com', inventory: 1})
+        const piano = await createProduct({name: 'piano', description: 'test', price: 1000.00, image_url: 'www.testurl.com', inventory: 1})
+        const violin = await createProduct({name: 'violin', description: 'test', price: 500.00, image_url: 'www.testurl.com', inventory: 1})
+    } catch (error) {
+
+    }
+}
 
 
 async function dropTables(){
@@ -67,6 +92,8 @@ async function rebuildDB(){
 
         await dropTables();
         await createTables();
+        await createInitialUsers();
+        await createInitialProducts();
     } catch (error) {
         console.log("Error during rebuildDB")
         throw error;
