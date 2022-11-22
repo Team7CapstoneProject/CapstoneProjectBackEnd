@@ -1,15 +1,17 @@
-const { PORT = 3000 } = process.env
+const { PORT = 3002 } = process.env
 const express = require('express')
-const cors = require('cors')
 const server = express()
-server.use(cors())
+const cors = require('cors')
 const morgan = require('morgan')
+
+const {client} = require('./db')
+// const {application} = require('express')
+client.connect()
+
+server.use(cors())
 server.use(morgan('dev'))
 
 server.use(express.json())
-
-const apiRouter =("./api")
-server.use('/api', apiRouter)
 
 server.use((req, res, next)=>{
     console.log("Body Logger Start------")
@@ -19,9 +21,9 @@ server.use((req, res, next)=>{
     next()
 })
 
-const {client} = require('./db')
-// const {application} = require('express')
-client.connect()
+const apiRouter = require("./api")
+server.use('/api', apiRouter)
+
 
 server.listen(PORT, ()=>{
     console.log("The server is up on port", PORT)

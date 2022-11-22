@@ -17,6 +17,7 @@ async function dropTables(){
     }
 }
 
+//may need to add a category table for higher tier and link category tags to products
 async function createTables(){
     try {
         console.log('Starting to build tables...')
