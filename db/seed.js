@@ -17,9 +17,9 @@ async function createInitialUsers() {
 async function createInitialProducts() {
     try {
         console.log("Starting to create products...");
-        const guitar = await createProduct({name: 'guitar', description: 'test', price: 100.00, image_url: 'www.testurl.com', inventory: 1})
-        const piano = await createProduct({name: 'piano', description: 'test', price: 1000.00, image_url: 'www.testurl.com', inventory: 1})
-        const violin = await createProduct({name: 'violin', description: 'test', price: 500.00, image_url: 'www.testurl.com', inventory: 1})
+        const guitar = await createProduct({name: 'guitar', description: 'test', price: 100, image_url: 'www.testurl.com', inventory: 1})
+        const piano = await createProduct({name: 'piano', description: 'test', price: 1000, image_url: 'www.testurl.com', inventory: 1})
+        const violin = await createProduct({name: 'violin', description: 'test', price: 500, image_url: 'www.testurl.com', inventory: 1})
     } catch (error) {
 
     }
