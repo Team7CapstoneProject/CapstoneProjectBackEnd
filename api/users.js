@@ -3,7 +3,7 @@ const usersRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = process.env;
 const { requireUser } = require("./utils");
-const { getUserByEmail, createUser } = require("../db");
+const { getUserByEmail, createUser, getUser } = require("../db");
 
 //POST /api/users/login-----------------------------------------------------
 usersRouter.post("/login", async (req, res, next) => {
@@ -14,7 +14,7 @@ usersRouter.post("/login", async (req, res, next) => {
       message: "Please supply both an email and password",
     });
   }
-
+  // console.log("HEREEE", email, password);
   try {
     const user = await getUser({ email, password });
 
@@ -84,6 +84,16 @@ usersRouter.post("/register", async (req, res, next) => {
     });
   } catch ({ name, message }) {
     next({ name, message });
+  }
+});
+
+//GET /api/users/me-----------------------------------------------------
+usersRouter.get("/me", requireUser, async (req, res, next) => {
+  try {
+    console.log(req.user, "HI");
+    res.send(req.user);
+  } catch (error) {
+    next(error);
   }
 });
 

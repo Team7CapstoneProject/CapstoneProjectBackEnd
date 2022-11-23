@@ -155,16 +155,16 @@ async function testDB() {
   try {
     // console.log("starting to test database...");
 
-    console.log("Calling getUser");
+    // console.log("Calling getUser");
     const user = await getUser({
       email: "admin@gmail.com",
       password: "admin",
     });
     // console.log("Result getUser", user);
 
-    // console.log("Calling getUserByEmail");
+    console.log("Calling getUserByEmail");
     const _user = await getUserByEmail("admin@gmail.com");
-    // console.log("Result getUserByEmail", _user);
+    console.log("Result getUserByEmail", _user);
 
     // console.log("Calling getAllUsers");
     const users = await getAllUsers();
