@@ -32,10 +32,8 @@ async function createUser({
 
 async function getUser({ email, password }) {
   const user = await getUserByEmail(email);
-  console.log(user, "USER");
   const hashedPassword = user.password;
   const isValid = await bcrypt.compare(password, hashedPassword);
-  console.log("HERE", user.password);
   try {
     if (isValid) {
       delete user.password;
