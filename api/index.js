@@ -3,6 +3,9 @@ const express = require('express');
 const apiRouter = express.Router();
 
 //add other routers here later
+const usersRouter = require("./users")
+apiRouter.use("/products", usersRouter)
+
 const productsRouter = require("./products")
 apiRouter.use("/products", productsRouter)
 

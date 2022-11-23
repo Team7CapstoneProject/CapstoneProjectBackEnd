@@ -1,4 +1,5 @@
 const client = require("./client");
+const bcrypt = require("bcrypt");
 
 async function createUser({
   first_name,
@@ -7,6 +8,9 @@ async function createUser({
   email,
   is_admin,
 }) {
+  const SALT_COUNT = 10;
+  const hashedPassword = await bcrypt.hash(password, SALT_COUNT);
+
   try {
     const {
       rows: [user],
@@ -16,10 +20,37 @@ async function createUser({
       VALUES($1, $2, $3, $4, $5)
       ON CONFLICT (email) DO NOTHING
       RETURNING *;`,
-      [first_name, last_name, password, email, is_admin]
+      [first_name, last_name, hashedPassword, email, is_admin]
     );
 
+    delete user.password;
     return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getUser({ email, password }) {
+  const user = await getUserByEmail(email);
+  const hashedPassword = user.password;
+  const isValid = await bcrypt.compare(password, hashedPassword);
+
+  try {
+    if (!email || !hashedPassword) {
+      return null;
+    }
+
+    const currentUser = await getUserByEmail( email );
+    if (!currentUser) {
+      return null;
+    }
+
+    if (isValid) {
+      delete currentUser.password;
+      return currentUser;
+    } else {
+      return null;
+    }
   } catch (error) {
     throw error;
   }
@@ -53,6 +84,24 @@ async function getUserById(userId) {
     if (!user) {
       return null;
     }
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getUserByEmail(email) {
+  try {
+    const {
+      rows: [user],
+    } = await client.query(
+      `
+        SELECT * 
+        FROM users
+        WHERE email=$1`,
+      [email]
+    );
 
     return user;
   } catch (error) {
@@ -107,8 +156,10 @@ async function deleteUser(userId) {
 
 module.exports = {
   createUser,
+  getUser,
   getAllUsers,
   getUserById,
+  getUserByEmail,
   updateUser,
   deleteUser,
 };

@@ -1,10 +1,10 @@
-const { PORT = 3002 } = process.env
+const { PORT = 3000 } = process.env
 const express = require('express')
 const server = express()
 const cors = require('cors')
 const morgan = require('morgan')
 
-const {client} = require('./db')
+const client = require('./db/client')
 // const {application} = require('express')
 client.connect()
 
