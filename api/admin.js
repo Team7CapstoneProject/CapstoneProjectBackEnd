@@ -10,6 +10,7 @@ const {
   getAllUsers,
   getUserById,
   deleteProduct,
+  getAllCarts
 } = require("../db");
 
 //GET /api/admin/users-------------------------------------------------------------
@@ -138,4 +139,20 @@ adminRouter.delete(
     }
   }
 );
+
+
+//GET /api/admin/cart -----------------------------------------------------------------
+
+adminRouter.get("/cart", requireAdmin, async (res, req, next)=>{
+  try {
+      const allCarts = await getAllCarts();
+      
+      res.send(allCarts)
+  } catch (error) {
+  next(error);
+  }
+})
+
+
+
 module.exports = adminRouter;
