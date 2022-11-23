@@ -1,5 +1,10 @@
 const client = require("./client");
+const {
+    attachProductsToCart,
+} = require("./cart_products")
 
+
+//may need to add attachProductsToCart for these two functions later
 async function getCartById(id){
 try {
     const {
@@ -31,13 +36,19 @@ async function getCartByEmail(email){
     }
 }
 
-// async function getAllCarts(){
-//     try {
-//         const {rows} = await client.query
-//     } catch (error) {
-//         throw error
-//     }
-// }
+async function getAllCarts(){
+    try {
+        const {rows} = await client.query(`
+    SELECT cart.*, users.email AS "shopperName"
+    FROM cart
+    JOIN users ON cart.user_id = users.id
+        `);
+        const carts = await attachProductsToCart(rows);
+        return carts;
+    } catch (error) {
+        throw error
+    }
+}
 
 
 async function createCart({id, user_id, is_complete}){
@@ -94,4 +105,5 @@ module.exports ={
     deleteCart,
     getCartById,
     getCartByEmail,
+    getAllCarts,
 }
