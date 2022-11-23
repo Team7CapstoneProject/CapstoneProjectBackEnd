@@ -1,5 +1,21 @@
 const client = require("./client");
 
+  async function addProductToCart({cart_id, product_id, quantity}){
+    try {
+      const {
+        rows: [cart_product]
+      } = await client.query(`
+      INSERT INTO cart_products(cart_id, product_id, quantity)
+      VALUES ($1, $2, $3)
+      ON CONFLICT (cart_id, product_id) DO NOTHING
+      RETURNING *;
+      `, [cart_id, product_id, quantity])
+
+      return cart_product;
+    } catch (error) {
+      throw error;
+    }
+  }
 
 async function attachProductsToCart(carts){
   const cartsToReturn = [...carts]
@@ -30,21 +46,39 @@ async function attachProductsToCart(carts){
   }
   }
   
-  async function updateCartProducts(){
-  
+  async function deleteProductFromCart(productId) {
+    try {
+      await client.query(`
+      DELETE
+      FROM cart_products
+      WHERE product_id=${productId}
+      RETURNING * `);
+    } catch (error) {
+      throw error;
+    }
   }
-  
-  
-async function deleteProductFromCart(productId) {
+
+  async function updateCartProductQuantity(id, quantity){
   try {
-    await client.query(`
-    DELETE
-    FROM cart_products
-    WHERE product_id=${productId}
-    RETURNING * `);
+      const {
+        rows: [cart_products]
+      } = await client.query(`
+      UPDATE cart_products
+      SET quantity=$1
+      WHERE id=$2
+      RETURNING *
+      `, [quantity, id]);
+    
+    return cart_products
   } catch (error) {
     throw error;
   }
-}
+  }
+  
+  
 
-module.exports = { deleteProductFromCart, attachProductsToCart };
+module.exports = { 
+  addProductToCart,
+  attachProductsToCart,
+  deleteProductFromCart,  
+  updateCartProductQuantity, };
