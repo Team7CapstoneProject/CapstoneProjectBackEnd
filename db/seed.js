@@ -10,6 +10,16 @@ const {
   getProductById,
   getProductByName,
   updateProduct,
+  addProductToCart,
+  attachProductsToCart,
+  deleteProductFromCart,
+  updateCartProductQuantity,
+  createCart,
+  updateCartCompletion,
+  deleteCart,
+  getCartById,
+  getCartByEmail,
+  getAllCarts
 } = require("./index");
 const client = require("./client");
 
@@ -138,6 +148,35 @@ async function createInitialProducts() {
   }
 }
 
+async function createInitialCarts(){
+  try {
+    console.log("starting to create Carts...")
+    const cart1 = await createCart({
+      id: 1,
+      user_id:1,
+      is_complete: false
+    })
+    const cart2 = await createCart({
+      id: 2,
+      user_id: 2, 
+      is_complete: false
+    })
+    const cart3 = await createCart({
+      id: 3,
+      user_id: 2,
+      is_complete: true
+    })
+
+      // console.log(cart1, "CART 1111111111111111")
+      // console.log(cart2, "CART 2222222222222222")
+      // console.log(cart3, "CART 3333333333333333")
+
+    console.log("finished creating Carts...")
+  } catch (error) {
+    console.error("error creating carts...")
+  }
+}
+
 async function rebuildDB() {
   try {
     client.connect();
@@ -145,6 +184,7 @@ async function rebuildDB() {
     await createTables();
     await createInitialUsers();
     await createInitialProducts();
+    await createInitialCarts();
   } catch (error) {
     console.log("Error during rebuildDB");
     throw error;
@@ -203,6 +243,34 @@ async function testDB() {
       inventory: 5,
     });
     // console.log("Result updateProduct", updatedProduct);
+
+    // console.log("Calling getAllCarts")
+    const allCarts = await getAllCarts();
+    // console.log("Result getAllCarts", allCarts)
+
+    // console.log("calling getCartById")
+    const cartById = await getCartById(1);
+    // console.log("result getCartById", cartById)
+
+    // console.log("calling getCartByEmail")
+    const cartByEmail = await getCartByEmail("user@gmail.com");
+    // console.log("result getCartByEmail", cartByEmail)
+
+    console.log("calling updateCartCompletion")
+    const updateCart = await updateCartCompletion(2, true);
+    console.log("result updateCartCompletion", updateCart)
+
+    console.log("calling deleteCart")
+    const deletedCart = await deleteCart(3);
+    console.log("result of deleteCart", deletedCart)
+
+    console.log("calling addProductToCart")
+    const addProducts = await addProductToCart(2, 3, 4)
+    console.log("result addProductsToCart", addProducts)
+
+    console.log("Calling updateCartProduct")
+
+
 
     console.log("finished database test....");
   } catch (error) {
