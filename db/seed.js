@@ -203,9 +203,9 @@ async function testDB() {
     });
     // console.log("Result getUser", user);
 
-    console.log("Calling getUserByEmail");
+    // console.log("Calling getUserByEmail");
     const _user = await getUserByEmail("admin@gmail.com");
-    console.log("Result getUserByEmail", _user);
+    // console.log("Result getUserByEmail", _user);
 
     // console.log("Calling getAllUsers");
     const users = await getAllUsers();
@@ -258,24 +258,24 @@ async function testDB() {
     // console.log("result getCartByEmail", cartByEmail)
 
     console.log("calling updateCartCompletion")
-    const updateCart = await updateCartCompletion(2, true);
+    const updateCart = await updateCartCompletion(2);
     console.log("result updateCartCompletion", updateCart)
 
-    console.log("calling deleteCart")
+    // console.log("calling deleteCart")
     const deletedCart = await deleteCart(3);
-    console.log("result of deleteCart", deletedCart)
+    // console.log("result of deleteCart", deletedCart)
 
     console.log("calling addProductToCart...")
-    const addProducts = await addProductToCart(2, 3, 4);
-    console.log("result addProductsToCart", addProducts)
+    const addedProductsToCart = await addProductToCart(2, 3, 4);
+    console.log("result addProductsToCart", addedProductsToCart)
 
     console.log("Calling updateCartProduct...")
-    const updateCartProducts = await updateCartProducts(1, 5);
-    console.log("result of updateCartProduct", updateCartProducts)
-
-    console.log("calling deleteProductFromCart")
+    const updatedCartProducts = await updateCartProductQuantity(1, 5);
+    console.log("result of updateCartProduct", updatedCartProducts)
+// 
+    // console.log("calling deleteProductFromCart")
     const deletedProductFromCart = await deleteProductFromCart(1);
-    console.log("result of deleteProductFromCart", deletedProductFromCart)
+    // console.log("result of deleteProductFromCart", deletedProductFromCart)
 
 
 

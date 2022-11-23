@@ -1,6 +1,6 @@
 const client = require("./client");
 
-  async function addProductToCart({cart_id, product_id, quantity}){
+  async function addProductToCart(cart_id, product_id, quantity){
     try {
       const {
         rows: [cart_product]
