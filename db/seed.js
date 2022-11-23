@@ -72,7 +72,8 @@ async function createTables() {
         CREATE TABLE cart_products(
             id SERIAL PRIMARY KEY, 
             cart_id INTEGER REFERENCES cart(id) NOT NULL, 
-            product_id INTEGER REFERENCES products(id) NOT NULL, 
+            product_id INTEGER REFERENCES products(id) NOT NULL,
+            UNIQUE (cart_id, product_id),
             quantity INTEGER 
         );
         `);
@@ -264,11 +265,17 @@ async function testDB() {
     const deletedCart = await deleteCart(3);
     console.log("result of deleteCart", deletedCart)
 
-    console.log("calling addProductToCart")
-    const addProducts = await addProductToCart(2, 3, 4)
+    console.log("calling addProductToCart...")
+    const addProducts = await addProductToCart(2, 3, 4);
     console.log("result addProductsToCart", addProducts)
 
-    console.log("Calling updateCartProduct")
+    console.log("Calling updateCartProduct...")
+    const updateCartProducts = await updateCartProducts(1, 5);
+    console.log("result of updateCartProduct", updateCartProducts)
+
+    console.log("calling deleteProductFromCart")
+    const deletedProductFromCart = await deleteProductFromCart(1);
+    console.log("result of deleteProductFromCart", deletedProductFromCart)
 
 
 
