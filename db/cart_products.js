@@ -78,10 +78,8 @@ async function attachProductsToCart(carts){
   }
   }
   
-  
-
 module.exports = { 
   addProductToCart,
   attachProductsToCart,
-  deleteProductFromCart,  
-  updateCartProductQuantity, };
+  deleteProductFromCart,
+  updateCartProductQuantity };
