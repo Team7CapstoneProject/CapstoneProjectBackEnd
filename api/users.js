@@ -14,7 +14,6 @@ usersRouter.post("/login", async (req, res, next) => {
       message: "Please supply both an email and password",
     });
   }
-  // console.log("HEREEE", email, password);
   try {
     const user = await getUser({ email, password });
 
@@ -90,7 +89,6 @@ usersRouter.post("/register", async (req, res, next) => {
 //GET /api/users/me-----------------------------------------------------
 usersRouter.get("/me", requireUser, async (req, res, next) => {
   try {
-    console.log(req.user, "HI");
     res.send(req.user);
   } catch (error) {
     next(error);
