@@ -1,30 +1,30 @@
-const { PORT = 3000 } = process.env
-const express = require('express')
-const server = express()
-const cors = require('cors')
-const morgan = require('morgan')
+const { PORT = 3000 } = process.env;
+const express = require("express");
+const server = express();
+const cors = require("cors");
+const morgan = require("morgan");
+require("dotenv").config();
 
-const client = require('./db/client')
+const client = require("./db/client");
 // const {application} = require('express')
-client.connect()
+client.connect();
 
-server.use(cors())
-server.use(morgan('dev'))
+server.use(cors());
+server.use(morgan("dev"));
 
-server.use(express.json())
+server.use(express.json());
 
-server.use((req, res, next)=>{
-    console.log("Body Logger Start------")
-    console.log(req.body)
-    console.log("Body Logger End-------")
+server.use((req, res, next) => {
+  console.log("Body Logger Start------");
+  console.log(req.body);
+  console.log("Body Logger End-------");
 
-    next()
-})
+  next();
+});
 
-const apiRouter = require("./api")
-server.use('/api', apiRouter)
+const apiRouter = require("./api");
+server.use("/api", apiRouter);
 
-
-server.listen(PORT, ()=>{
-    console.log("The server is up on port", PORT)
-})
+server.listen(PORT, () => {
+  console.log("The server is up on port", PORT);
+});
