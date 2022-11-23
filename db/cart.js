@@ -1,115 +1,136 @@
 const client = require("./client");
-const {
-    attachProductsToCart,
-} = require("./cart_products")
-
+const { attachProductsToCart } = require("./cart_products");
 
 //may need to add attachProductsToCart for these two functions later
-async function getCartById(id){
-try {
+async function getCartById(id) {
+  try {
     const {
-        rows: [cart]
+      rows: [cart],
     } = await client.query(
-        `SELECT *
+      `SELECT *
         FROM cart
         WHERE id=$1`,
-        [id]
-    )
-    return cart
-} catch (error) {
-    throw error
-}}
+      [id]
+    );
+    return cart;
+  } catch (error) {
+    throw error;
+  }
+}
 
-async function getCartByEmail(email){
-    try {
-        const {
-            rows: [cart]
-        } = await client.query(`
+async function getCartByEmail(email) {
+  try {
+    const {
+      rows: [cart],
+    } = await client.query(
+      `
         SELECT cart.*, users.email AS "email"
         FROM cart
         JOIN users ON cart.user_id = users.id
         WHERE email=$1`,
-        [email])
+      [email]
+    );
 
-        return cart;
-    } catch (error) {
-        throw error
-    }
+    return cart;
+  } catch (error) {
+    throw error;
+  }
 }
 
-async function getAllCarts(){
+async function getCartsByUserId(user_id) {
     try {
-        const {rows} = await client.query(`
+      const {
+        rows: [cart],
+      } = await client.query(
+        `
+          SELECT cart.*, users.id AS "user_id"
+          FROM cart
+          JOIN users ON cart.user_id = users.id
+          WHERE user_id=$1`,
+        [user_id]
+      );
+  
+      return cart;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+async function getAllCarts() {
+  try {
+    const { rows } = await client.query(`
     SELECT cart.*, users.email AS "email"
     FROM cart
     JOIN users ON cart.user_id = users.id
         `);
-        const carts = await attachProductsToCart(rows);
-        return carts;
-    } catch (error) {
-        throw error
-    }
+    const carts = await attachProductsToCart(rows);
+    return carts;
+  } catch (error) {
+    throw error;
+  }
 }
 
-
-async function createCart({id, user_id, is_complete}){
-try {
-    const {rows: [cart]} = await client.query(`
-    INSERT INTO cart(id, user_id, is_complete)
-    VALUES ($1, $2, $3)
+async function createCart({user_id}) {
+  try {
+    const {
+      rows: [cart],
+    } = await client.query(
+      `
+    INSERT INTO cart( user_id)
+    VALUES ($1)
     RETURNING *`,
-    [id, user_id, is_complete]);
+      [user_id]
+    );
 
-    return cart
-} catch (error) {
+    return cart;
+  } catch (error) {
     throw error;
-}}
+  }
+}
 
-async function updateCartCompletion(id){
-    try {
-        const {
-            rows: [cart]
-        } = await client.query(`
+async function updateCartCompletion(id) {
+  try {
+    const {
+      rows: [cart],
+    } = await client.query(`
         UPDATE cart
         SET is_complete=true
         WHERE id=${id}
         RETURNING *
-        `)
+        `);
 
-        // const cartStatus = await getCartById(id)
-        return cart
-    } catch (error) {
-        throw error
-    }
+    // const cartStatus = await getCartById(id)
+    return cart;
+  } catch (error) {
+    throw error;
+  }
 }
 
-async function deleteCart(id){
-    try {
-       await client.query(`
+async function deleteCart(id) {
+  try {
+    await client.query(`
        DELETE
        FROM cart_products
        WHERE cart_id=${id}
        RETURNING *`);
 
-       await client.query(`
+    await client.query(`
        DELETE
        FROM cart
        WHERE id=${id}
-       RETURNING *`
-       );
+       RETURNING *`);
 
-       const remainingCarts = await getAllCarts()
-       return console.log("This is the remaining carts", remainingCarts)
-    } catch (error) {
-        throw error
-    }
+  } catch (error) {
+    throw error;
+  }
 }
 
-module.exports ={
-    createCart,
-    updateCartCompletion,
-    deleteCart,
-    getCartById,
-    getCartByEmail,
-    getAllCarts,
-}
+module.exports = {
+  createCart,
+  updateCartCompletion,
+  deleteCart,
+  getCartById,
+  getCartByEmail,
+  getAllCarts,
+  getCartsByUserId,
+};

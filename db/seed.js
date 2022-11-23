@@ -19,7 +19,8 @@ const {
   deleteCart,
   getCartById,
   getCartByEmail,
-  getAllCarts
+  getAllCarts,
+  getCartsByUserId
 } = require("./index");
 const client = require("./client");
 
@@ -153,24 +154,17 @@ async function createInitialCarts(){
   try {
     console.log("starting to create Carts...")
     const cart1 = await createCart({
-      id: 1,
       user_id:1,
-      is_complete: false
+      // is_complete: false
     })
     const cart2 = await createCart({
-      id: 2,
       user_id: 2, 
-      is_complete: false
+      // is_complete: false
     })
     const cart3 = await createCart({
-      id: 3,
       user_id: 2,
-      is_complete: true
+      // is_complete: true
     })
-
-      // console.log(cart1, "CART 1111111111111111")
-      // console.log(cart2, "CART 2222222222222222")
-      // console.log(cart3, "CART 3333333333333333")
 
     console.log("finished creating Carts...")
   } catch (error) {
@@ -265,9 +259,9 @@ async function testDB() {
     const deletedCart = await deleteCart(3);
     // console.log("result of deleteCart", deletedCart)
 
-    console.log("calling addProductToCart...")
+    // console.log("calling addProductToCart...")
     const addedProductsToCart = await addProductToCart(2, 3, 4);
-    console.log("result addProductsToCart", addedProductsToCart)
+    // console.log("result addProductsToCart", addedProductsToCart)
 
     // console.log("Calling updateCartProduct...")
     const updatedCartProducts = await updateCartProductQuantity(1, 5);
@@ -280,6 +274,11 @@ async function testDB() {
   //  console.log("Calling getAllCarts")
   //  const allCartsAgain = await getAllCarts();
   //  console.log("Result getAllCarts", allCartsAgain)
+
+  
+   console.log("Calling getCartsByUserId")
+   const cartsByUserId = await getCartsByUserId(1);
+   console.log("Result getCartsByUserId", cartsByUserId)
 
 
     console.log("finished database test....");

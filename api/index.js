@@ -40,6 +40,9 @@ apiRouter.use("/products", productsRouter);
 const adminRouter = require("./admin");
 apiRouter.use("/admin", adminRouter);
 
+const cartRouter = require("./cart");
+apiRouter.use("/cart", cartRouter);
+
 
 apiRouter.use((error, req, res, next) => {
   res.send({
