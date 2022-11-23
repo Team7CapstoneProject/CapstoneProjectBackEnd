@@ -65,17 +65,18 @@ try {
     throw error;
 }}
 
-async function updateCartCompletion(id, status){
+async function updateCartCompletion(id){
     try {
         const {
             rows: [cart]
         } = await client.query(`
         UPDATE cart
-        SET is_complete=$1
-        WHERE id=$2
-        `, [status, id])
+        SET is_complete=true
+        WHERE id=${id}
+        RETURNING *
+        `)
 
-        console.log("cart from updateCartCompletion", cart)
+        // const cartStatus = await getCartById(id)
         return cart
     } catch (error) {
         throw error
@@ -89,6 +90,7 @@ async function deleteCart(id){
        FROM cart_products
        WHERE cart_id=${id}
        RETURNING *`);
+
        await client.query(`
        DELETE
        FROM cart
@@ -96,6 +98,8 @@ async function deleteCart(id){
        RETURNING *`
        );
 
+       const remainingCarts = await getAllCarts()
+       return console.log("This is the remaining carts", remainingCarts)
     } catch (error) {
         throw error
     }
