@@ -17,6 +17,8 @@ const client = require("./client");
     }
   }
 
+  //check later to ensure functionality on this function
+  //this is for any functions that are calling for cart data that need products included in data result
 async function attachProductsToCart(carts){
   const cartsToReturn = [...carts]
   const binds = carts.map((_, index)=> `$${index + 1}`).join(", ")
@@ -48,11 +50,12 @@ async function attachProductsToCart(carts){
   
   async function deleteProductFromCart(productId) {
     try {
-      await client.query(`
+      const { rows: [cart_product]} = await client.query(`
       DELETE
       FROM cart_products
-      WHERE product_id=${productId}
-      RETURNING * `);
+      WHERE product_id=$1
+      RETURNING * `, [productId]);
+      return cart_product
     } catch (error) {
       throw error;
     }

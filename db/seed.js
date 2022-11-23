@@ -257,9 +257,9 @@ async function testDB() {
     const cartByEmail = await getCartByEmail("user@gmail.com");
     // console.log("result getCartByEmail", cartByEmail)
 
-    console.log("calling updateCartCompletion")
+    // console.log("calling updateCartCompletion")
     const updateCart = await updateCartCompletion(2);
-    console.log("result updateCartCompletion", updateCart)
+    // console.log("result updateCartCompletion", updateCart)
 
     // console.log("calling deleteCart")
     const deletedCart = await deleteCart(3);
@@ -269,14 +269,17 @@ async function testDB() {
     const addedProductsToCart = await addProductToCart(2, 3, 4);
     console.log("result addProductsToCart", addedProductsToCart)
 
-    console.log("Calling updateCartProduct...")
+    // console.log("Calling updateCartProduct...")
     const updatedCartProducts = await updateCartProductQuantity(1, 5);
-    console.log("result of updateCartProduct", updatedCartProducts)
+    // console.log("result of updateCartProduct", updatedCartProducts)
 // 
     // console.log("calling deleteProductFromCart")
-    const deletedProductFromCart = await deleteProductFromCart(1);
+    const deletedProductFromCart = await deleteProductFromCart(3);
     // console.log("result of deleteProductFromCart", deletedProductFromCart)
 
+  //  console.log("Calling getAllCarts")
+  //  const allCartsAgain = await getAllCarts();
+  //  console.log("Result getAllCarts", allCartsAgain)
 
 
     console.log("finished database test....");
