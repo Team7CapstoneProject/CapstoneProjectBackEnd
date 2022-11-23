@@ -14,7 +14,7 @@ productsRouter.get("/", async (req, res, next) => {
   }
 });
 
-//POST /api/products/:productId-----------------------------------------------------
+//GET /api/products/:productId-----------------------------------------------------
 productsRouter.get("/:productId", async (req, res, next) => {
   const { productId } = req.params;
   const product = await getProductById(productId);
@@ -30,7 +30,6 @@ productsRouter.get("/:productId", async (req, res, next) => {
       });
     }
 
-    res.send(product);
   } catch (error) {
     next(error);
   }
