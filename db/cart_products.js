@@ -38,7 +38,7 @@ async function attachProductsToCart(carts){
         (product) => product.cart_id === cart.id)
         cart.products = productsToAdd;
     }
-    console.log("cart to return", cartsToReturn)
+    // console.log("cart to return", cartsToReturn)
     return cartsToReturn;
   
   } catch (error) {

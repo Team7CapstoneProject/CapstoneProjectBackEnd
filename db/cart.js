@@ -25,8 +25,9 @@ async function getCartByEmail(email){
         const {
             rows: [cart]
         } = await client.query(`
-        SELECT *
+        SELECT cart.*, users.email AS "email"
         FROM cart
+        JOIN users ON cart.user_id = users.id
         WHERE email=$1`,
         [email])
 
@@ -39,7 +40,7 @@ async function getCartByEmail(email){
 async function getAllCarts(){
     try {
         const {rows} = await client.query(`
-    SELECT cart.*, users.email AS "shopperName"
+    SELECT cart.*, users.email AS "email"
     FROM cart
     JOIN users ON cart.user_id = users.id
         `);
@@ -64,16 +65,17 @@ try {
     throw error;
 }}
 
-async function updateCartCompletion(id){
+async function updateCartCompletion(id, status){
     try {
         const {
             rows: [cart]
         } = await client.query(`
         UPDATE cart
-        SET is_complete= true
-        WHERE id=${id}
-        `, [id])
+        SET is_complete=$1
+        WHERE id=$2
+        `, [status, id])
 
+        console.log("cart from updateCartCompletion", cart)
         return cart
     } catch (error) {
         throw error
