@@ -1,7 +1,9 @@
 const {
   createUser,
-  getUserById,
+  getUser,
   getAllUsers,
+  getUserById,
+  getUserByEmail,
   updateUser,
   createProduct,
   getAllProducts,
@@ -153,18 +155,29 @@ async function testDB() {
   try {
     console.log("starting to test database...");
 
+    // console.log("Calling getUser");
+    const user = await getUser({
+      email: "admin@gmail.com",
+      password: "admin",
+    });
+    // console.log("Result getUser", user);
+
+    // console.log("Calling getUserByEmail");
+    const _user = await getUserByEmail("admin@gmail.com");
+    // console.log("Result getUserByEmail", _user);
+
     // console.log("Calling getAllUsers");
     const users = await getAllUsers();
     // console.log("Result getAllUsers", users);
 
     // console.log("Calling getUserById");
-    const user = await getUserById(1);
-    // console.log("Result getUserById", user);
+    const singleUser = await getUserById(1);
+    // console.log("Result getUserById", singleUser);
 
     // console.log("Calling updateUser");
     const updatedUser = await updateUser(1, {
-      first_name: "Robby",
-      last_name: "Bacus",
+      first_name: "Jong Un",
+      last_name: "Kim",
       email: "thisemail@gmail.com",
     });
     // console.log("Result updateUser", updatedUser);
@@ -190,8 +203,6 @@ async function testDB() {
       inventory: 5,
     });
     // console.log("Result updateProduct", updatedProduct);
-
-
 
     console.log("finished database test....");
   } catch (error) {
