@@ -153,9 +153,9 @@ async function rebuildDB() {
 
 async function testDB() {
   try {
-    console.log("starting to test database...");
+    // console.log("starting to test database...");
 
-    // console.log("Calling getUser");
+    console.log("Calling getUser");
     const user = await getUser({
       email: "admin@gmail.com",
       password: "admin",

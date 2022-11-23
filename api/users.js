@@ -3,6 +3,7 @@ const usersRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = process.env;
 const { requireUser } = require("./utils");
+const { getUserByEmail, createUser } = require("../db");
 
 //POST /api/users/login-----------------------------------------------------
 usersRouter.post("/login", async (req, res, next) => {
@@ -39,7 +40,7 @@ usersRouter.post("/login", async (req, res, next) => {
 //POST /api/users/register-----------------------------------------------------
 
 usersRouter.post("/register", async (req, res, next) => {
-  const { first_name, last_name, email, password } = req.body;
+  const { first_name, last_name, email, password, is_admin } = req.body;
 
   const existingUser = await getUserByEmail(email);
 
@@ -64,6 +65,7 @@ usersRouter.post("/register", async (req, res, next) => {
       last_name,
       email,
       password,
+      is_admin,
     });
 
     const token = jwt.sign(
