@@ -25,6 +25,33 @@ async function createProduct({
   }
 }
 
+async function deleteProduct(productId) {
+  try {
+    await client.query(`
+          DELETE
+          FROM cart_products
+          WHERE product_id=${productId}
+          RETURNING * `);
+
+    await client.query(`
+          DELETE
+          FROM products
+          WHERE id=${productId}
+          RETURNING *`);
+
+    let product = await getProductById(productId);
+    if (!product) {
+      console.log(`Product with productId ${productId} was deleted`);
+    } else {
+      `Product with productId ${productId} was not deleted`;
+    }
+
+    return product;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function getAllProducts() {
   try {
     const { rows: productIds } = await client.query(`
@@ -98,34 +125,6 @@ async function updateProduct(productId, fields = {}) {
     );
 
     return product;
-  } catch (error) {
-    throw error;
-  }
-}
-
-async function deleteProduct(productId) {
-  try {
-    await client.query(`
-          DELETE
-          FROM cart_products
-          WHERE product_id=${productId}
-          RETURNING * `);
-
-    await client.query(`
-          DELETE
-          FROM products
-          WHERE id=${productId}
-          RETURNING *`);
-
-    let product = await getProductById(productId);
-    if (!product) {
-      console.log(`Product with productId ${productId} was deleted`);
-    } else {
-      `Product with productId ${productId} was not deleted`;
-    }
-
-    return product;
-
   } catch (error) {
     throw error;
   }
