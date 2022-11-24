@@ -1,6 +1,7 @@
 const client = require("./client");
 const bcrypt = require("bcrypt");
 
+//WORKING IN SEED.JS
 async function createUser({
   first_name,
   last_name,
@@ -30,22 +31,35 @@ async function createUser({
   }
 }
 
-async function getUser({ email, password }) {
-  const user = await getUserByEmail(email);
-  const hashedPassword = user.password;
-  const isValid = await bcrypt.compare(password, hashedPassword);
+//WORKING IN SEED.JS
+async function deleteUser(userId) {
   try {
-    if (isValid) {
-      delete user.password;
-      return user;
+    await client.query(`
+        DELETE
+        from cart
+        WHERE user_id=${userId}
+        RETURNING *`);
+
+    await client.query(`
+        DELETE
+        from users
+        WHERE id=${userId}
+        RETURNING *`);
+
+    let user = await getUserById(userId);
+    if (!user) {
+      console.log(`User with userId ${userId} was deleted`);
     } else {
-      return null;
+      `User with userId ${userId} was not deleted`;
     }
+
+    return user;
   } catch (error) {
     throw error;
   }
 }
 
+//WORKING IN SEED.JS
 async function getAllUsers() {
   try {
     const { rows: userIds } = await client.query(`
@@ -62,25 +76,24 @@ async function getAllUsers() {
   }
 }
 
-async function getUserById(userId) {
+//WORKING IN SEED.JS
+async function getUser({ email, password }) {
+  const user = await getUserByEmail(email);
+  const hashedPassword = user.password;
+  const isValid = await bcrypt.compare(password, hashedPassword);
   try {
-    const {
-      rows: [user],
-    } = await client.query(`
-        SELECT * 
-        FROM users
-        WHERE id=${userId}`);
-
-    if (!user) {
+    if (isValid) {
+      delete user.password;
+      return user;
+    } else {
       return null;
     }
-
-    return user;
   } catch (error) {
     throw error;
   }
 }
 
+//WORKING IN SEED.JS
 async function getUserByEmail(email) {
   try {
     const {
@@ -99,6 +112,23 @@ async function getUserByEmail(email) {
   }
 }
 
+//WORKING IN SEED.JS
+async function getUserById(userId) {
+  try {
+    const {
+      rows: [user],
+    } = await client.query(`
+        SELECT * 
+        FROM users
+        WHERE id=${userId}`);
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+//WORKING IN SEED.JS
 async function updateUser(userId, fields = {}) {
   const setString = Object.keys(fields)
     .map((key, index) => `"${key}"=$${index + 1}`)
@@ -120,25 +150,8 @@ async function updateUser(userId, fields = {}) {
       Object.values(fields)
     );
 
+    delete user.password;
     return user;
-  } catch (error) {
-    throw error;
-  }
-}
-
-async function deleteUser(userId) {
-  try {
-    await client.query(`
-        DELETE
-        from cart
-        WHERE user_id=${userId}
-        RETURNING *`);
-
-    await client.query(`
-        DELETE
-        from users
-        WHERE id=${userId}
-        RETURNING *`);
   } catch (error) {
     throw error;
   }
@@ -146,10 +159,10 @@ async function deleteUser(userId) {
 
 module.exports = {
   createUser,
-  getUser,
-  getAllUsers,
-  getUserById,
-  getUserByEmail,
-  updateUser,
   deleteUser,
+  getAllUsers,
+  getUser,
+  getUserByEmail,
+  getUserById,
+  updateUser,
 };
