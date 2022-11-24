@@ -2,7 +2,7 @@ const client = require("./client");
 const { attachProductsToCart } = require("./cart_products");
 
 //may need to add attachProductsToCart for these two functions later
-async function getCartById(id) {
+async function getCartById(cartId) {
   try {
     const {
       rows: [cart],
@@ -10,7 +10,7 @@ async function getCartById(id) {
       `SELECT *
         FROM cart
         WHERE id=$1`,
-      [id]
+      [cartId]
     );
     return cart;
   } catch (error) {
@@ -38,39 +38,41 @@ async function getCartByEmail(email) {
 }
 
 async function getCartsByUserId(user_id) {
-    try {
-      const {
-        rows: [cart],
-      } = await client.query(
-        `
+  try {
+    const {
+      rows: [cart],
+    } = await client.query(
+      `
           SELECT cart.*, users.id AS "user_id"
           FROM cart
           JOIN users ON cart.user_id = users.id
           WHERE user_id=$1`,
-        [user_id]
-      );
-  
-      return cart;
-    } catch (error) {
-      throw error;
-    }
+      [user_id]
+    );
+
+    return cart;
+  } catch (error) {
+    throw error;
   }
+}
 
 async function getAllCarts() {
   try {
-    const { rows } = await client.query(`
-    SELECT cart.*, users.email AS "email"
-    FROM cart
-    JOIN users ON cart.user_id = users.id
-        `);
-    const carts = await attachProductsToCart(rows);
+    const { rows: cartIds } = await client.query(`
+    SELECT id
+    FROM cart`);
+
+    const carts = await Promise.all(
+      cartIds.map((cart) => getCartById(cart.id))
+    );
+
     return carts;
   } catch (error) {
     throw error;
   }
 }
 
-async function createCart({user_id}) {
+async function createCart({ user_id }) {
   try {
     const {
       rows: [cart],
@@ -106,20 +108,28 @@ async function updateCartCompletion(id) {
   }
 }
 
-async function deleteCart(id) {
+async function deleteCart(cartId) {
   try {
     await client.query(`
        DELETE
        FROM cart_products
-       WHERE cart_id=${id}
+       WHERE cart_id=${cartId}
        RETURNING *`);
 
     await client.query(`
        DELETE
        FROM cart
-       WHERE id=${id}
+       WHERE id=${cartId}
        RETURNING *`);
 
+    let cart = await getCartById(cartId);
+    if (!cart) {
+      console.log(`Cart with cartId ${cartId} was deleted`);
+    } else {
+      `Cart with cartId ${cartId} was not deleted`;
+    }
+
+    return cart;
   } catch (error) {
     throw error;
   }
@@ -127,10 +137,10 @@ async function deleteCart(id) {
 
 module.exports = {
   createCart,
-  updateCartCompletion,
   deleteCart,
-  getCartById,
-  getCartByEmail,
   getAllCarts,
+  getCartByEmail,
+  getCartById,
   getCartsByUserId,
+  updateCartCompletion,
 };
