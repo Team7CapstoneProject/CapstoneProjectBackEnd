@@ -117,7 +117,6 @@ async function createInitialUsers() {
       last_name: "user",
       password: "user",
       email: "user@gmail.com",
-      is_admin: false,
     });
     const userForDeletion = await createUser({
       first_name: "userForDeletion",

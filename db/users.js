@@ -7,7 +7,7 @@ async function createUser({
   last_name,
   password,
   email,
-  is_admin,
+  is_admin
 }) {
   const SALT_COUNT = 10;
   const hashedPassword = await bcrypt.hash(password, SALT_COUNT);

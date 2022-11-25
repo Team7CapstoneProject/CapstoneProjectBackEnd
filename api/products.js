@@ -1,6 +1,5 @@
 const express = require("express");
 const productsRouter = express.Router();
-const { requireUser } = require("./utils");
 const { getAllProducts, getProductById } = require("../db");
 
 
