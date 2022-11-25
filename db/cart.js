@@ -1,6 +1,28 @@
 const client = require("./client");
-const { attachProductsToCart } = require("./cart_products");
 
+
+//WORKING IN SEED.JS
+async function addProductToCart({ cart_id, product_id, quantity }) {
+  try {
+    const {
+      rows: [cart_product],
+    } = await client.query(
+      `
+      INSERT INTO cart_products(cart_id, product_id, quantity)
+      VALUES ($1, $2, $3)
+      ON CONFLICT (cart_id, product_id) DO NOTHING
+      RETURNING *;
+      `,
+      [cart_id, product_id, quantity]
+    );
+
+    return cart_product;
+  } catch (error) {
+    throw error;
+  }
+}
+
+//WORKING IN SEED.JS
 async function createCart({ user_id }) {
   try {
     const {
@@ -19,6 +41,7 @@ async function createCart({ user_id }) {
   }
 }
 
+//WORKING IN SEED.JS
 async function deleteCart(cartId) {
   try {
     await client.query(`
@@ -46,6 +69,7 @@ async function deleteCart(cartId) {
   }
 }
 
+//WORKING IN SEED.JS
 async function getAllCarts() {
   try {
     const { rows: cartIds } = await client.query(`
@@ -62,6 +86,7 @@ async function getAllCarts() {
   }
 }
 
+//WORKING IN SEED.JS
 async function getCartByEmail(email) {
   try {
     const {
@@ -81,6 +106,7 @@ async function getCartByEmail(email) {
   }
 }
 
+//WORKING IN SEED.JS
 async function getCartById(cartId) {
   try {
     const {
@@ -97,6 +123,7 @@ async function getCartById(cartId) {
   }
 }
 
+//WORKING IN SEED.JS
 async function getCartsByUserId(user_id) {
   try {
     const {
@@ -116,6 +143,7 @@ async function getCartsByUserId(user_id) {
   }
 }
 
+//WORKING IN SEED.JS
 async function updateCartCompletion(id) {
   try {
     const {
@@ -135,6 +163,7 @@ async function updateCartCompletion(id) {
 }
 
 module.exports = {
+  addProductToCart,
   createCart,
   deleteCart,
   getAllCarts,

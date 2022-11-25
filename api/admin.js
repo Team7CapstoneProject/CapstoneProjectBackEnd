@@ -13,39 +13,6 @@ const {
   updateProduct,
 } = require("../db");
 
-//GET ALL USERS : WORKING
-//GET /api/admin/users-------------------------------------------------------------
-adminRouter.get("/users", requireAdmin, async (req, res, next) => {
-  try {
-    const allUsers = await getAllUsers();
-
-    res.send(allUsers);
-  } catch (error) {
-    next(error);
-  }
-});
-
-//GET USER BY USER ID : WORKING
-//GET /api/admin/users/:userId--------------------------------------------------------
-adminRouter.get("/users/:userId", requireAdmin, async (req, res, next) => {
-  const { userId } = req.params;
-  const user = await getUserById(userId);
-
-  try {
-    if (user) {
-      res.send(user);
-    } else {
-      res.send({
-        name: "UserNotFoundError",
-        message: `User with ID ${userId} not found.`,
-        error: "UserNotFoundError",
-      });
-    }
-  } catch (error) {
-    next(error);
-  }
-});
-
 //POST A PRODUCT : WORKING
 //POST /api/admin/products-------------------------------------------------------------
 adminRouter.post("/products", requireAdmin, async (req, res, next) => {
@@ -74,13 +41,60 @@ adminRouter.post("/products", requireAdmin, async (req, res, next) => {
   }
 });
 
+//GET ALL CARTS : NOT WORKING
+//GET /api/admin/cart-----------------------------------------------------------------
+
+adminRouter.get("/carts", requireAdmin, async (req, res, next) => {
+  try {
+    const allCarts = await getAllCarts();
+
+    res.send(allCarts);
+  } catch (error) {
+    next(error);
+  }
+});
+
 //GET ALL PRODUCTS : WORKING
-//GET /api/admin/products
+//GET /api/admin/products-----------------------------------------------------------------
+
 adminRouter.get("/products", requireAdmin, async (req, res, next) => {
   try {
     const allProducts = await getAllProducts();
 
     res.send(allProducts);
+  } catch (error) {
+    next(error);
+  }
+});
+
+//GET ALL USERS : WORKING
+//GET /api/admin/users-------------------------------------------------------------
+adminRouter.get("/users", requireAdmin, async (req, res, next) => {
+  try {
+    const allUsers = await getAllUsers();
+
+    res.send(allUsers);
+  } catch (error) {
+    next(error);
+  }
+});
+
+//GET USER BY USER ID : WORKING
+//GET /api/admin/users/:userId--------------------------------------------------------
+adminRouter.get("/users/:userId", requireAdmin, async (req, res, next) => {
+  const { userId } = req.params;
+  const user = await getUserById(userId);
+
+  try {
+    if (user) {
+      res.send(user);
+    } else {
+      res.send({
+        name: "UserNotFoundError",
+        message: `User with ID ${userId} not found.`,
+        error: "UserNotFoundError",
+      });
+    }
   } catch (error) {
     next(error);
   }
@@ -145,17 +159,5 @@ adminRouter.delete(
     }
   }
 );
-
-//GET /api/admin/cart -----------------------------------------------------------------
-
-adminRouter.get("/cart", requireAdmin, async (res, req, next) => {
-  try {
-    const allCarts = await getAllCarts();
-
-    res.send(allCarts);
-  } catch (error) {
-    next(error);
-  }
-});
 
 module.exports = adminRouter;
