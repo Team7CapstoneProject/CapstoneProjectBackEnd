@@ -55,7 +55,7 @@ usersRouter.post("/register", async (req, res, next) => {
     if (password.length < 8) {
       next({
         name: "PasswordError",
-        message: "Password Too Short!",
+        message: "Password must be 8 characters or more.",
         error: "This is the error message",
       });
     }
@@ -67,6 +67,10 @@ usersRouter.post("/register", async (req, res, next) => {
       password,
       is_admin,
     });
+
+    if (!user.error) {
+      console.log(`${first_name} has successfully registered an account`);
+    }
 
     const token = jwt.sign(
       {
@@ -86,7 +90,6 @@ usersRouter.post("/register", async (req, res, next) => {
     next({ name, message });
   }
 });
-
 
 //GET MY ACCOUNT INFO : WORKING
 //GET /api/users/me-----------------------------------------------------

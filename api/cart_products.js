@@ -16,7 +16,7 @@ const { requireUser } = require("./utils");
 //DELETE /api/cart_products/:productId
 
 
-//EDIT CART PRODUCT QUANTITY : WORKING
+//UPDATE CART PRODUCT QUANTITY : WORKING
 //PATCH /api/cart_products/:cartProductId------------------------------------------
 cartProductsRouter.patch(
   "/:cartProductId",
