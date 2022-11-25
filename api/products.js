@@ -3,6 +3,8 @@ const productsRouter = express.Router();
 const { requireUser } = require("./utils");
 const { getAllProducts, getProductById } = require("../db");
 
+
+//GET ALL PRODUCTS : WORKING
 //GET /api/products/-----------------------------------------------------
 productsRouter.get("/", async (req, res, next) => {
   try {
@@ -14,6 +16,7 @@ productsRouter.get("/", async (req, res, next) => {
   }
 });
 
+//GET PRODUCT BY PRODUCT ID : WORKING
 //GET /api/products/:productId-----------------------------------------------------
 productsRouter.get("/:productId", async (req, res, next) => {
   const { productId } = req.params;

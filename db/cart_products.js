@@ -40,6 +40,31 @@ async function canEditCartProduct(cartProductId, userId) {
 }
 
 //WORKING IN SEED.JS
+async function deleteCartProduct(cartProductId) {
+  try {
+    await client.query(
+      `
+      DELETE
+      FROM cart_products
+      WHERE id=$1
+      RETURNING * `,
+      [cartProductId]
+    );
+
+    let cartProduct = await getCartProductById(cartProductId);
+    if (!cartProduct) {
+      console.log(`CartProduct with ID ${cartProductId} was deleted`);
+    } else {
+      `CartProduct with ID ${cartProductId} was not deleted`;
+    }
+
+    return cartProduct;
+  } catch (error) {
+    throw error;
+  }
+}
+
+//WORKING IN SEED.JS
 async function deleteProductFromCart(productId) {
   try {
     const {
@@ -82,19 +107,14 @@ async function getCartProductById(cartProductId) {
   FROM cart_products
   WHERE id = ${cartProductId}`);
 
-    if (!cart_product) {
-      return null;
-    }
-
     return cart_product;
   } catch (error) {
     throw error;
   }
 }
 
-
 //WORKING IN SEED.JS
-async function updateCartProductQuantity(id, quantity) {
+async function updateCartProductQuantity(cartProductId, quantity) {
   try {
     const {
       rows: [cart_products],
@@ -105,7 +125,7 @@ async function updateCartProductQuantity(id, quantity) {
       WHERE id=$2
       RETURNING *
       `,
-      [quantity, id]
+      [quantity, cartProductId]
     );
 
     return cart_products;
@@ -116,43 +136,43 @@ async function updateCartProductQuantity(id, quantity) {
 
 //check later to ensure functionality on this function
 //this is for any functions that are calling for cart data that need products included in data result
-async function attachProductsToCart(carts) {
-  const cartsToReturn = [...carts];
-  const binds = carts.map((_, index) => `$${index + 1}`).join(", ");
-  const cartIds = carts.map((cart) => cart.id);
-  if (!cartIds?.length) return [];
+// async function attachProductsToCart(carts) {
+//   const cartsToReturn = [...carts];
+//   const binds = carts.map((_, index) => `$${index + 1}`).join(", ");
+//   const cartIds = carts.map((cart) => cart.id);
+//   if (!cartIds?.length) return [];
 
-  try {
-    const { rows: products } = await client.query(
-      `
-      SELECT products.*, cart_products.quantity, cart_products.id AS "cartProductId", cart_products.cart_id
-      FROM products
-      JOIN cart_products ON cart_products.product_id = products.id
-      WHERE cart_products.cart_id IN (${binds});
-    `,
-      cartIds
-    );
+//   try {
+//     const { rows: products } = await client.query(
+//       `
+//       SELECT products.*, cart_products.quantity, cart_products.id AS "cartProductId", cart_products.cart_id
+//       FROM products
+//       JOIN cart_products ON cart_products.product_id = products.id
+//       WHERE cart_products.cart_id IN (${binds});
+//     `,
+//       cartIds
+//     );
 
-    for (const cart of cartsToReturn) {
-      const productsToAdd = products.filter(
-        (product) => product.cart_id === cart.id
-      );
-      cart.products = productsToAdd;
-    }
-    // console.log("cart to return", cartsToReturn)
-    return cartsToReturn;
-  } catch (error) {
-    throw error;
-  }
-}
+//     for (const cart of cartsToReturn) {
+//       const productsToAdd = products.filter(
+//         (product) => product.cart_id === cart.id
+//       );
+//       cart.products = productsToAdd;
+//     }
+//     // console.log("cart to return", cartsToReturn)
+//     return cartsToReturn;
+//   } catch (error) {
+//     throw error;
+//   }
+// }
 
 module.exports = {
   addProductToCart,
-  attachProductsToCart,
+  // attachProductsToCart,
   canEditCartProduct,
+  deleteCartProduct,
   deleteProductFromCart,
   getCartProductByCart,
   getCartProductById,
   updateCartProductQuantity,
-
 };

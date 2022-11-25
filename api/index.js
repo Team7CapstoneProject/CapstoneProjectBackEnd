@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = process.env;
 const { getUserById } = require("../db");
 
+//AUTHENTICATION------------------------------------------------------
 apiRouter.use(async (req, res, next) => {
   const prefix = "Bearer ";
   const auth = req.header("Authorization");
@@ -30,7 +31,8 @@ apiRouter.use(async (req, res, next) => {
     });
   }
 });
-//add other routers here later
+
+//ROUTES------------------------------------------------------
 const usersRouter = require("./users");
 apiRouter.use("/users", usersRouter);
 
@@ -43,7 +45,10 @@ apiRouter.use("/admin", adminRouter);
 const cartRouter = require("./cart");
 apiRouter.use("/cart", cartRouter);
 
+const cartProductsRouter = require("./cart_products");
+apiRouter.use("/cart_products", cartProductsRouter);
 
+//ERROR HANDLING-----------------------------------------------------
 apiRouter.use((error, req, res, next) => {
   res.send({
     name: error.name,

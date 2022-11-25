@@ -5,6 +5,7 @@ const { JWT_SECRET } = process.env;
 const { requireUser } = require("./utils");
 const { getUserByEmail, createUser, getUser } = require("../db");
 
+//LOGIN USER : WORKING
 //POST /api/users/login-----------------------------------------------------
 usersRouter.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
@@ -36,8 +37,8 @@ usersRouter.post("/login", async (req, res, next) => {
   }
 });
 
+//REGISTER USER : WORKING
 //POST /api/users/register-----------------------------------------------------
-
 usersRouter.post("/register", async (req, res, next) => {
   const { first_name, last_name, email, password, is_admin } = req.body;
 
@@ -86,6 +87,8 @@ usersRouter.post("/register", async (req, res, next) => {
   }
 });
 
+
+//GET MY ACCOUNT INFO : WORKING
 //GET /api/users/me-----------------------------------------------------
 usersRouter.get("/me", requireUser, async (req, res, next) => {
   try {

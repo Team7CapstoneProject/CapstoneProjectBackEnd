@@ -31,8 +31,9 @@ const {
   //CART PRODUCT FUNCTIONS----------
 
   addProductToCart,
-  attachProductsToCart,
+  // attachProductsToCart,
   canEditCartProduct,
+  deleteCartProduct,
   deleteProductFromCart,
   getCartProductByCart,
   getCartProductById,
@@ -230,6 +231,13 @@ async function createInitialCartProducts() {
     });
     //cart 2, banjo, x4
 
+    const cartProductForDeletion = await addProductToCart({
+      cart_id: 2,
+      product_id: 1,
+      quantity: 1,
+    });
+    //cart 2, banjo, x4
+
     console.log("finished creating cart products...");
   } catch (error) {
     console.error("error creating cart products...");
@@ -345,27 +353,31 @@ async function testDB() {
     //CART PRODUCT TESTS---------------------------------------------------
 
     // console.log("Calling canEditCartProduct");
-    const canEditIsTrue = await canEditCartProduct(1, 1);
+    // const canEditIsTrue = await canEditCartProduct(1, 1);
     // console.log("Result canEditCartProduct should be true", canEditIsTrue);
 
     // console.log("Calling canEditCartProduct");
-    const canEditIsFalse = await canEditCartProduct(4, 1);
+    // const canEditIsFalse = await canEditCartProduct(4, 1);
     // console.log("Result canEditCartProduct should be false", canEditIsFalse);
 
+    // console.log("Calling deleteCartProduct");
+    // const deletedCartProduct = await deleteCartProduct(4);
+    // console.log("Result deleteCartProduct should be undefined", deletedCartProduct);
+
     // console.log("calling deleteProductFromCart")
-    const deletedProductFromCart = await deleteProductFromCart(3);
+    // const deletedProductFromCart = await deleteProductFromCart(3);
     // console.log("result of deleteProductFromCart", deletedProductFromCart)
 
     // console.log("Calling getCartProductByCart");
-    const cartProduct = await getCartProductByCart(1);
+    // const cartProduct = await getCartProductByCart(1);
     // console.log("Result getCartProductByCart", cartProduct);
 
     // console.log("Calling getCartProductById");
-    const cartByProductId = await getCartProductById(1);
+    // const cartByProductId = await getCartProductById(1);
     // console.log("Result getCartProductById", cartByProductId);
 
     // console.log("Calling updateCartProduct...")
-    const updatedCartProducts = await updateCartProductQuantity(1, 4);
+    // const updatedCartProducts = await updateCartProductQuantity(1, 4);
     // console.log("result of updateCartProduct", updatedCartProducts)
 
     console.log("finished database test....");
