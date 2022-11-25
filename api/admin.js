@@ -2,17 +2,18 @@ const express = require("express");
 const adminRouter = express.Router();
 const { requireAdmin } = require("./utils");
 const {
-  getAllProducts,
-  getProductById,
-  updateProduct,
-  getProductByName,
   createProduct,
-  getAllUsers,
-  getUserById,
   deleteProduct,
   getAllCarts,
+  getAllProducts,
+  getAllUsers,
+  getProductById,
+  getProductByName,
+  getUserById,
+  updateProduct,
 } = require("../db");
 
+//GET ALL USERS : WORKING
 //GET /api/admin/users-------------------------------------------------------------
 adminRouter.get("/users", requireAdmin, async (req, res, next) => {
   try {
@@ -24,6 +25,7 @@ adminRouter.get("/users", requireAdmin, async (req, res, next) => {
   }
 });
 
+//GET USER BY USER ID : WORKING
 //GET /api/admin/users/:userId--------------------------------------------------------
 adminRouter.get("/users/:userId", requireAdmin, async (req, res, next) => {
   const { userId } = req.params;
@@ -44,6 +46,7 @@ adminRouter.get("/users/:userId", requireAdmin, async (req, res, next) => {
   }
 });
 
+//POST A PRODUCT : WORKING
 //POST /api/admin/products-------------------------------------------------------------
 adminRouter.post("/products", requireAdmin, async (req, res, next) => {
   const { name, description, price, image_url, inventory } = req.body;
@@ -71,6 +74,7 @@ adminRouter.post("/products", requireAdmin, async (req, res, next) => {
   }
 });
 
+//GET ALL PRODUCTS : WORKING
 //GET /api/admin/products
 adminRouter.get("/products", requireAdmin, async (req, res, next) => {
   try {
@@ -82,6 +86,7 @@ adminRouter.get("/products", requireAdmin, async (req, res, next) => {
   }
 });
 
+//UPDATE PRODUCT : WORKING
 //PATCH /api/admin/products/:productId--------------------------------------------------
 adminRouter.patch(
   "/products/:productId",
@@ -115,6 +120,7 @@ adminRouter.patch(
   }
 );
 
+//DELETE PRODUCT : WORKING
 //DELETE /api/admin/products/:productId------------------------------------------------
 adminRouter.delete(
   "/products/:productId",

@@ -1,51 +1,92 @@
 const express = require("express");
-const { getAllCarts } = require("../db");
+const {
+  canEditCartProduct,
+  deleteCartProduct,
+  getCartById,
+  getCartProductById,
+  updateCartProductQuantity,
+} = require("../db");
 const cartProductsRouter = express.Router();
-const { createCart } = require("../db");
-
 const { requireUser } = require("./utils");
 
 
+//ADD PRODUCT TO CART
+//POST /api/cart_products/
+
+//DELETE PRODUCT FROM CART
+//DELETE /api/cart_products/:productId
+
+
+//EDIT CART PRODUCT QUANTITY : WORKING
 //PATCH /api/cart_products/:cartProductId------------------------------------------
-
-router.patch("/:cartProductId", requireUser, async (req, res, next) => {
+cartProductsRouter.patch(
+  "/:cartProductId",
+  requireUser,
+  async (req, res, next) => {
     const { cartProductId } = req.params;
-    const { product_id } = req.body;
-  
-    const fields = {};
-    if (typeof product_id != "undefined") {
-      fields.product_id = product_id;
-  
-      const routineOwner = await canEditRoutineActivity(
-        routineActivityId,
-        req.user.id
-      );
-  
-      const routineActivity = await getRoutineActivityById(routineActivityId);
-      const routineId = routineActivity.routineId;
-      const routine = await getRoutineById(routineId);
-      const routineName = routine.name;
-  
-      try {
-        if (routineOwner) {
-          let updatedRoutineActivity = await updateRoutineActivity({
-            id: routineActivityId,
-            ...fields,
-          });
-          res.send(updatedRoutineActivity);
-        } else {
-          res.status(403);
-          next({
-            name: "OwnerUserError",
-            message: `User ${req.user.username} is not allowed to update ${routineName}`,
-          });
-        }
-      } catch (error) {
-        next(error);
+    const { quantity } = req.body;
+
+    const isCartOwner = await canEditCartProduct(cartProductId, req.user.id);
+
+    const selectedCartProduct = await getCartProductById(cartProductId);
+    const cart = await getCartById(selectedCartProduct.cart_id);
+    const originalCartOwner = cart.user_id;
+    console.log(
+      `User with ID ${originalCartOwner} is the original cart owner. User with ID ${req.user.id} is trying to update cartProducts`
+    );
+
+    try {
+      if (isCartOwner) {
+        let updatedCartProduct = await updateCartProductQuantity(
+          cartProductId,
+          quantity
+        );
+        res.send(updatedCartProduct);
+      } else {
+        res.status(403);
+        next({
+          name: "OwnerUserError",
+          message: `User with ID ${req.user.id} is not allowed to update cart owned by user with ID ${originalCartOwner}`,
+        });
       }
+    } catch (error) {
+      next(error);
     }
-  });
+  }
+);
 
-
+//DELETE CART PRODUCT : WORKING
 //DELETE /api/cart_products/:cartProductId------------------------------------------
+cartProductsRouter.delete(
+  "/:cartProductId",
+  requireUser,
+  async (req, res, next) => {
+    const { cartProductId } = req.params;
 
+    const isCartOwner = await canEditCartProduct(cartProductId, req.user.id);
+
+    const selectedCartProduct = await getCartProductById(cartProductId);
+    const cart = await getCartById(selectedCartProduct.cart_id);
+    const originalCartOwner = cart.user_id;
+    console.log(
+      `User with ID ${originalCartOwner} is the original cart owner. User with ID ${req.user.id} is trying to delete cartProducts Is cart owner: ${isCartOwner}`
+    );
+
+    try {
+      if (isCartOwner) {
+        let deletedCartProduct = await deleteCartProduct(cartProductId);
+        res.send(deletedCartProduct);
+      } else {
+        res.status(403);
+        next({
+          name: "OwnerUserError",
+          message: `User with ID ${req.user.id} is not allowed to delete cart owned by user with ID ${originalCartOwner}`,
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+module.exports = cartProductsRouter;
