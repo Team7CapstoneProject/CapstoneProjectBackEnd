@@ -122,6 +122,7 @@ async function getUserById(userId) {
         FROM users
         WHERE id=${userId}`);
 
+    delete user.password;
     return user;
   } catch (error) {
     throw error;

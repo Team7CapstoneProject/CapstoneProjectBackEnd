@@ -20,6 +20,7 @@ const {
 
   //CART FUNCTIONS----------
 
+  addProductToCart,
   createCart,
   deleteCart,
   getAllCarts,
@@ -30,7 +31,6 @@ const {
 
   //CART PRODUCT FUNCTIONS----------
 
-  addProductToCart,
   // attachProductsToCart,
   canEditCartProduct,
   deleteCartProduct,
@@ -51,9 +51,9 @@ async function dropTables() {
             DROP TABLE IF EXISTS products;
             DROP TABLE IF EXISTS users;
             `);
-    console.log("finished dropping tables...");
+    console.log("Finished dropping Tables!");
   } catch (error) {
-    console.error("error dropping tables...");
+    console.error("Error dropping Tables...");
     throw error;
   }
 }
@@ -61,7 +61,7 @@ async function dropTables() {
 //may need to add a category table for higher tier and link category tags to products
 async function createTables() {
   try {
-    console.log("Starting to build tables...");
+    console.log("Starting to build Tables...");
 
     await client.query(`
         CREATE TABLE users (
@@ -95,16 +95,16 @@ async function createTables() {
             quantity INTEGER 
         );
         `);
-    console.log("finished building tables...");
+    console.log("Finished building Tables!");
   } catch (error) {
-    console.error("error building tables...");
+    console.error("Error building Tables...");
     throw error;
   }
 }
 
 async function createInitialUsers() {
   try {
-    console.log("Starting to create users...");
+    console.log("Starting to create Users...");
     const admin = await createUser({
       first_name: "admin",
       last_name: "admin",
@@ -127,16 +127,16 @@ async function createInitialUsers() {
       is_admin: false,
     });
 
-    console.log("Finished creating users!");
+    console.log("Finished creating Users!");
   } catch (error) {
-    console.error("Error creating users!");
+    console.error("Error creating Users...");
     throw error;
   }
 }
 
 async function createInitialProducts() {
   try {
-    console.log("Starting to create products...");
+    console.log("Starting to create Products...");
     const guitar = await createProduct({
       name: "guitar",
       description: "test",
@@ -171,15 +171,16 @@ async function createInitialProducts() {
     // console.log(piano, "this is piano");
     // console.log(violin, "this is violin");
 
-    console.log("Finished creating products");
+    console.log("Finished creating Products");
   } catch (error) {
+    console.error("Error creating Products...");
     throw error;
   }
 }
 
 async function createInitialCarts() {
   try {
-    console.log("starting to create Carts...");
+    console.log("Starting to create Carts...");
     const cart1 = await createCart({
       user_id: 1,
       // is_complete: false
@@ -193,15 +194,16 @@ async function createInitialCarts() {
       // is_complete: true
     });
 
-    console.log("finished creating Carts...");
+    console.log("Finished creating Carts!");
   } catch (error) {
-    console.error("error creating carts...");
+    console.error("Error creating Carts...");
+    throw error;
   }
 }
 
 async function createInitialCartProducts() {
   try {
-    console.log("starting to create cart products...");
+    console.log("Starting to create CartProducts...");
 
     const cartProduct1 = await addProductToCart({
       cart_id: 1,
@@ -238,9 +240,11 @@ async function createInitialCartProducts() {
     });
     //cart 2, banjo, x4
 
-    console.log("finished creating cart products...");
+
+    // console.log(cartProduct1)
+    console.log("Finished creating CartProducts!");
   } catch (error) {
-    console.error("error creating cart products...");
+    console.error("Error creating CartProducts...");
   }
 }
 
@@ -261,93 +265,93 @@ async function rebuildDB() {
 
 async function testDB() {
   try {
-    console.log("starting to test database...");
+    console.log("Starting to test database...");
 
     //USER TESTS---------------------------------------------------
 
     // console.log("Calling deleteUser");
-    const deletedUser = await deleteUser(3);
+    // const deletedUser = await deleteUser(3);
     // console.log("Result deleteUser should be undefined", deletedUser);
 
     // console.log("Calling getAllUsers");
-    const users = await getAllUsers();
+    // const users = await getAllUsers();
     // console.log("Result getAllUsers", users);
 
     // console.log("Calling getUser");
-    const user = await getUser({
-      email: "admin@gmail.com",
-      password: "admin",
-    });
+    // const user = await getUser({
+    //   email: "admin@gmail.com",
+    //   password: "admin",
+    // });
     // console.log("Result getUser", user);
 
     // console.log("Calling getUserByEmail");
-    const _user = await getUserByEmail("admin@gmail.com");
+    // const _user = await getUserByEmail("admin@gmail.com");
     // console.log("Result getUserByEmail", _user);
 
     // console.log("Calling getUserById");
-    const singleUser = await getUserById(1);
+    // const singleUser = await getUserById(1);
     // console.log("Result getUserById", singleUser);
 
     // console.log("Calling updateUser");
-    const updatedUser = await updateUser(1, {
-      first_name: "Jong Un",
-      last_name: "Kim",
-      email: "thisemail@gmail.com",
-    });
+    // const updatedUser = await updateUser(1, {
+    //   first_name: "Jong Un",
+    //   last_name: "Kim",
+    //   email: "thisemail@gmail.com",
+    // });
     // console.log("Result updateUser", updatedUser);
 
     //PRODUCT TESTS---------------------------------------------------
 
     // console.log("calling deleteProduct")
-    const deletedProduct = await deleteProduct(4);
+    // const deletedProduct = await deleteProduct(4);
     // console.log("Result of deleteProduct should be undefined", deletedProduct)
 
     // console.log("Calling getAllProducts");
-    const products = await getAllProducts();
+    // const products = await getAllProducts();
     // console.log("Result getAllProducts", products);
 
     // console.log("Calling getProductById")
-    const product = await getProductById(1);
+    // const product = await getProductById(1);
     // console.log("Result getProductById", product)
 
     // console.log("Calling getProductByName")
-    const productName = await getProductByName("violin");
+    // const productName = await getProductByName("violin");
     // console.log("Result getProductByName", productName)
 
     // console.log("Calling updateProduct");
-    const updatedProduct = await updateProduct(1, {
-      name: "banjo",
-      description: "a nice banjo",
-      price: 100,
-      image_url: "www.anotherImageUrl.com",
-      inventory: 5,
-    });
+    // const updatedProduct = await updateProduct(1, {
+    //   name: "banjo",
+    //   description: "a nice banjo",
+    //   price: 100,
+    //   image_url: "www.anotherImageUrl.com",
+    //   inventory: 5,
+    // });
     // console.log("Result updateProduct", updatedProduct);
 
     //CART TESTS---------------------------------------------------
 
     // console.log("calling deleteCart")
-    const deletedCart = await deleteCart(3);
+    // const deletedCart = await deleteCart(3);
     // console.log("Result of deleteCart should be undefined", deletedCart)
 
     // console.log("Calling getAllCarts");
-    const allCarts = await getAllCarts();
+    // const allCarts = await getAllCarts();
     // console.log("Result getAllCarts", allCarts);
 
     // console.log("calling getCartByEmail");
-    const cartByEmail = await getCartByEmail("user@gmail.com");
+    // const cartByEmail = await getCartByEmail("user@gmail.com");
     // console.log("result getCartByEmail", cartByEmail);
 
     // console.log("calling getCartById");
-    const cartById = await getCartById(1);
+    // const cartById = await getCartById(1);
     // console.log("result getCartById", cartById);
 
     // console.log("Calling getCartsByUserId");
-    const cartsByUserId = await getCartsByUserId(2);
+    // const cartsByUserId = await getCartsByUserId(2);
     // console.log("Result getCartsByUserId", cartsByUserId);
 
     // console.log("calling updateCartCompletion");
-    const updateCart = await updateCartCompletion(2);
+    // const updateCart = await updateCartCompletion(2);
     // console.log("result updateCartCompletion", updateCart);
 
     //CART PRODUCT TESTS---------------------------------------------------
@@ -380,9 +384,9 @@ async function testDB() {
     // const updatedCartProducts = await updateCartProductQuantity(1, 4);
     // console.log("result of updateCartProduct", updatedCartProducts)
 
-    console.log("finished database test....");
+    console.log("Finished database test!");
   } catch (error) {
-    console.error("error testing database...");
+    console.error("Error testing database...");
     throw error;
   }
 }

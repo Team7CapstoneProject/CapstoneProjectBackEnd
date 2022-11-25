@@ -1,5 +1,6 @@
 const client = require("./client");
 
+//WORKING IN SEED.JS
 async function createProduct({
   name,
   description,
@@ -25,6 +26,7 @@ async function createProduct({
   }
 }
 
+//WORKING IN SEED.JS
 async function deleteProduct(productId) {
   try {
     await client.query(`
@@ -52,6 +54,7 @@ async function deleteProduct(productId) {
   }
 }
 
+//WORKING IN SEED.JS
 async function getAllProducts() {
   try {
     const { rows: productIds } = await client.query(`
@@ -67,6 +70,7 @@ async function getAllProducts() {
   }
 }
 
+//WORKING IN SEED.JS
 async function getProductById(productId) {
   try {
     const {
@@ -85,6 +89,7 @@ async function getProductById(productId) {
   }
 }
 
+//WORKING IN SEED.JS
 async function getProductByName(productName) {
   try {
     const {
@@ -103,6 +108,7 @@ async function getProductByName(productName) {
   }
 }
 
+//WORKING IN SEED.JS
 async function updateProduct(productId, fields = {}) {
   const setString = Object.keys(fields)
     .map((key, index) => `"${key}"=$${index + 1}`)

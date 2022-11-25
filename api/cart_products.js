@@ -10,8 +10,7 @@ const cartProductsRouter = express.Router();
 const { requireUser } = require("./utils");
 
 
-//ADD PRODUCT TO CART
-//POST /api/cart_products/
+
 
 //DELETE PRODUCT FROM CART
 //DELETE /api/cart_products/:productId

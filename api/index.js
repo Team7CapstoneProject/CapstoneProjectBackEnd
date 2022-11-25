@@ -43,7 +43,7 @@ const adminRouter = require("./admin");
 apiRouter.use("/admin", adminRouter);
 
 const cartRouter = require("./cart");
-apiRouter.use("/cart", cartRouter);
+apiRouter.use("/carts", cartRouter);
 
 const cartProductsRouter = require("./cart_products");
 apiRouter.use("/cart_products", cartProductsRouter);
