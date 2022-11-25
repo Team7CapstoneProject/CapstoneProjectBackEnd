@@ -58,7 +58,7 @@ async function deleteCart(cartId) {
 
     let cart = await getCartById(cartId);
     if (!cart) {
-      console.log(`Cart with cartId ${cartId} was deleted`);
+      console.log(`Cart with ID ${cartId} was deleted`);
     } else {
       `Cart with cartId ${cartId} was not deleted`;
     }
