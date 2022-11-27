@@ -1,6 +1,5 @@
 const client = require("./client");
 
-
 //WORKING IN SEED.JS
 async function addProductToCart({ cart_id, product_id, quantity }) {
   try {
@@ -154,8 +153,6 @@ async function updateCartCompletion(id) {
         WHERE id=${id}
         RETURNING *
         `);
-
-    // const cartStatus = await getCartById(id)
     return cart;
   } catch (error) {
     throw error;
