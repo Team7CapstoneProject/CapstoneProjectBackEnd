@@ -34,7 +34,6 @@ const {
   // attachProductsToCart,
   canEditCartProduct,
   deleteCartProduct,
-  deleteProductFromCart,
   getCartProductByCart,
   getCartProductById,
   updateCartProductQuantity,
@@ -366,10 +365,6 @@ async function testDB() {
     // console.log("Calling deleteCartProduct");
     // const deletedCartProduct = await deleteCartProduct(4);
     // console.log("Result deleteCartProduct should be undefined", deletedCartProduct);
-
-    // console.log("calling deleteProductFromCart")
-    // const deletedProductFromCart = await deleteProductFromCart(3);
-    // console.log("result of deleteProductFromCart", deletedProductFromCart)
 
     // console.log("Calling getCartProductByCart");
     // const cartProduct = await getCartProductByCart(1);

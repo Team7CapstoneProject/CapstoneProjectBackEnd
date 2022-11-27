@@ -76,25 +76,6 @@ async function deleteCartProduct(cartProductId) {
 }
 
 //WORKING IN SEED.JS
-async function deleteProductFromCart(productId) {
-  try {
-    const {
-      rows: [cart_product],
-    } = await client.query(
-      `
-      DELETE
-      FROM cart_products
-      WHERE product_id=$1
-      RETURNING * `,
-      [productId]
-    );
-    return cart_product;
-  } catch (error) {
-    throw error;
-  }
-}
-
-//WORKING IN SEED.JS
 async function getCartProductByCart(cartId) {
   try {
     const { rows: cart_product } = await client.query(`
@@ -149,7 +130,6 @@ module.exports = {
   // attachProductsToCart,
   canEditCartProduct,
   deleteCartProduct,
-  deleteProductFromCart,
   getCartProductByCart,
   getCartProductById,
   updateCartProductQuantity,
