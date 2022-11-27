@@ -9,13 +9,6 @@ const {
 const cartProductsRouter = express.Router();
 const { requireUser } = require("./utils");
 
-
-
-
-//DELETE PRODUCT FROM CART
-//DELETE /api/cart_products/:productId
-
-
 //UPDATE CART PRODUCT QUANTITY : WORKING
 //PATCH /api/cart_products/:cartProductId------------------------------------------
 cartProductsRouter.patch(
