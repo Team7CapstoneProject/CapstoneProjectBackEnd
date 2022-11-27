@@ -68,7 +68,7 @@ adminRouter.get("/products", requireAdmin, async (req, res, next) => {
 });
 
 //GET ALL USERS : WORKING
-//GET /api/admin/users-------------------------------------------------------------
+//GET /api/admin/users-----------------------------------------------------------
 adminRouter.get("/users", requireAdmin, async (req, res, next) => {
   try {
     const allUsers = await getAllUsers();
