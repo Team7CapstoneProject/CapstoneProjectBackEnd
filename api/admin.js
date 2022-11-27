@@ -41,7 +41,7 @@ adminRouter.post("/products", requireAdmin, async (req, res, next) => {
   }
 });
 
-//GET ALL CARTS : NOT WORKING
+//GET ALL CARTS : WORKING
 //GET /api/admin/cart-----------------------------------------------------------------
 
 adminRouter.get("/carts", requireAdmin, async (req, res, next) => {

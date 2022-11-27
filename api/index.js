@@ -33,20 +33,20 @@ apiRouter.use(async (req, res, next) => {
 });
 
 //ROUTES------------------------------------------------------
-const usersRouter = require("./users");
-apiRouter.use("/users", usersRouter);
+const adminRouter = require("./admin");
+apiRouter.use("/admin", adminRouter);
+
+const cartProductsRouter = require("./cart_products");
+apiRouter.use("/cart_products", cartProductsRouter);
+
+const cartsRouter = require("./carts");
+apiRouter.use("/carts", cartsRouter);
 
 const productsRouter = require("./products");
 apiRouter.use("/products", productsRouter);
 
-const adminRouter = require("./admin");
-apiRouter.use("/admin", adminRouter);
-
-const cartRouter = require("./cart");
-apiRouter.use("/carts", cartRouter);
-
-const cartProductsRouter = require("./cart_products");
-apiRouter.use("/cart_products", cartProductsRouter);
+const usersRouter = require("./users");
+apiRouter.use("/users", usersRouter);
 
 //ERROR HANDLING-----------------------------------------------------
 apiRouter.use((error, req, res, next) => {
