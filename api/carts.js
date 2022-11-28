@@ -10,14 +10,14 @@ const {
 const cartRouter = express.Router();
 const { requireUser } = require("./utils");
 
-//ADD PRODUCT TO CART : NOT WORKING
+//ADD PRODUCT TO CART : WORKING
 //POST /api/carts/:cartId/products------------------------------------------------
-cartRouter.post("/:cartId/products", requireUser, async (req, res, next) => {
-  const { cartId } = req.params;
+cartRouter.post("/:cart_id/products", requireUser, async (req, res, next) => {
+  const { cart_id } = req.params;
   const { product_id, quantity } = req.body;
 
   //Gets the cart and arrays all the products
-  const cartArray = await getCartProductByCart(cartId);
+  const cartArray = await getCartProductByCart(cart_id);
   console.log(cartArray, "this is cart array");
   //Declare exists variable
   let exists = false;
@@ -30,15 +30,16 @@ cartRouter.post("/:cartId/products", requireUser, async (req, res, next) => {
   try {
     //If the product already exists in the cart, it throws an error.
     if (exists) {
+      res.status(400)
       return next({
         name: "ProductExistsInCartError",
-        message: `Product with ID ${product_id} already exists in cart with ID ${cartId}`,
+        message: `Product with ID ${product_id} already exists in cart with ID ${cart_id}`,
         error: "ProductExistsInCartError",
       });
       //Else it adds the product to the cart.
     } else {
       let addedProductToCart = await addProductToCart({
-        cartId,
+        cart_id,
         product_id,
         quantity,
       });
@@ -46,7 +47,7 @@ cartRouter.post("/:cartId/products", requireUser, async (req, res, next) => {
       res.send(addedProductToCart);
     }
   } catch (error) {
-    next();
+    throw error;
   }
 });
 
