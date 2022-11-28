@@ -16,28 +16,52 @@ const {
 //POST A PRODUCT : WORKING
 //POST /api/admin/products-------------------------------------------------------------
 adminRouter.post("/products", requireAdmin, async (req, res, next) => {
-  const { name, description, price, image_url, inventory } = req.body;
-
-  const existingProduct = await getProductByName(name);
-  if (existingProduct) {
-    next({
-      name: "ProductExistsError",
-      message: `A product with name "${name}" already exists`,
-    });
-  }
+  let {
+    name,
+    description,
+    price,
+    image_url,
+    inventory,
+    on_sale,
+    sale_percentage,
+  } = req.body;
 
   try {
+    const existingProduct = await getProductByName(name);
+
+    if (existingProduct) {
+      res.status(400);
+      return next({
+        name: "ProductExistsError",
+        message: `A product with name "${name}" already exists`,
+      });
+    }
+
+    if (on_sale === false) {
+      sale_percentage = null;
+    }
+
+    if (sale_percentage && (sale_percentage > 100 || sale_percentage < 0)) {
+      res.status(400);
+      return next({
+        name: "SalePercentageError",
+        message: `Sale percentage must be between 0-100.`,
+      });
+    }
+
     const product = await createProduct({
       name,
       description,
       price,
       image_url,
       inventory,
+      on_sale,
+      sale_percentage,
     });
 
     res.send(product);
   } catch (error) {
-    next(error);
+    throw error;
   }
 });
 
@@ -107,8 +131,28 @@ adminRouter.patch(
   requireAdmin,
   async (req, res, next) => {
     const { productId } = req.params;
-    const { name, description, price, image_url, inventory } = req.body;
+    let {
+      name,
+      description,
+      price,
+      image_url,
+      inventory,
+      on_sale,
+      sale_percentage,
+    } = req.body;
     const product = await getProductById(productId);
+
+    if (on_sale === false) {
+      sale_percentage = null;
+    }
+
+    if (sale_percentage && (sale_percentage > 100 || sale_percentage < 0)) {
+      res.status(400);
+      return next({
+        name: "SalePercentageError",
+        message: `Sale percentage must be between 0-100.`,
+      });
+    }
 
     const updateFields = {};
     updateFields.name = name;
@@ -116,6 +160,8 @@ adminRouter.patch(
     updateFields.price = price;
     updateFields.image_url = image_url;
     updateFields.inventory = inventory;
+    updateFields.on_sale = on_sale;
+    updateFields.sale_percentage = sale_percentage;
 
     try {
       if (!product) {
