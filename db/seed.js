@@ -75,10 +75,12 @@ async function createTables() {
         CREATE TABLE products (
             id SERIAL PRIMARY KEY,
             name VARCHAR(225) UNIQUE NOT NULL,
-            description TEXT NOT NULL,
+            description TEXT,
             price INTEGER,
-            image_url VARCHAR(225) NOT NULL,
-            inventory INTEGER 
+            image_url VARCHAR(225),
+            inventory INTEGER,
+            on_sale BOOLEAN DEFAULT false,
+            sale_percentage INTEGER
         );
 
         CREATE TABLE cart(
@@ -141,6 +143,8 @@ async function createInitialProducts() {
       price: 100.0,
       image_url: "www.testurl.com",
       inventory: 1,
+      on_sale: true,
+      sale_percentage: 20
     });
     const piano = await createProduct({
       name: "piano",
@@ -148,6 +152,8 @@ async function createInitialProducts() {
       price: 1000.0,
       image_url: "www.testurl.com",
       inventory: 1,
+      on_sale: false,
+      sale_percentage: null
     });
     const violin = await createProduct({
       name: "violin",
@@ -155,6 +161,8 @@ async function createInitialProducts() {
       price: 500.0,
       image_url: "www.testurl.com",
       inventory: 1,
+      on_sale: false,
+      sale_percentage: 0
     });
 
     const cello = await createProduct({
@@ -163,11 +171,15 @@ async function createInitialProducts() {
       price: 800.0,
       image_url: "www.testurl.com",
       inventory: 8,
+      on_sale: false,
+      sale_percentage: 0
     });
 
     // console.log(guitar, "this is guitar");
     // console.log(piano, "this is piano");
     // console.log(violin, "this is violin");
+    // console.log(cello, "this is cello");
+
 
     console.log("Finished creating Products");
   } catch (error) {
@@ -323,6 +335,8 @@ async function testDB() {
     //   price: 100,
     //   image_url: "www.anotherImageUrl.com",
     //   inventory: 5,
+    //   on_sale: false,
+    //   sale_percentage: 0
     // });
     // console.log("Result updateProduct", updatedProduct);
 
