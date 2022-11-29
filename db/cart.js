@@ -1,3 +1,5 @@
+// const { attachProductsToCart } = require("./cart_products");
+//come back to figure out why export/import of attachProductsToCart is not working
 const client = require("./client");
 
 //WORKING IN SEED.JS
@@ -68,16 +70,54 @@ async function deleteCart(cartId) {
   }
 }
 
+//working in GetAllCARTS ---- figure out why attachProductsToCart export is not working
+async function attachedProductsToCart(carts) {
+  const cartsToReturn = [...carts];
+  const binds = carts.map((_, index) => `$${index + 1}`).join(", ");
+  const cartIds = carts.map((cart) => cart.id);
+  if (!cartIds?.length) return [];
+
+  try {
+    const { rows: products } = await client.query(
+      `
+      SELECT products.*, cart_products.quantity, cart_products.id AS "cartProductId", cart_products.cart_id
+      FROM products
+      JOIN cart_products ON cart_products.product_id = products.id
+      WHERE cart_products.cart_id IN (${binds});
+    `,
+      cartIds
+    );
+
+    for (const cart of cartsToReturn) {
+      const productsToAdd = products.filter(
+        (product) => product.cart_id === cart.id
+      );
+      cart.products = productsToAdd;
+    }
+    return cartsToReturn;
+  } catch (error) {
+    throw error;
+  }
+}
+
 //WORKING IN SEED.JS
 async function getAllCarts() {
   try {
-    const { rows: cartIds } = await client.query(`
-    SELECT id
-    FROM cart`);
+    const {rows} = await client.query(`
+    SELECT cart.*, users.email AS "shopperName"
+    FROM cart
+    JOIN users ON cart.user_id = users.id
+        `);
+        const carts = await attachedProductsToCart(rows);
+        return carts;
 
-    const carts = await Promise.all(
-      cartIds.map((cart) => getCartById(cart.id))
-    );
+    // const { rows: cartIds } = await client.query(`
+    // SELECT id
+    // FROM cart`);
+
+    // const carts = await Promise.all(
+    //   cartIds.map((cart) => getCartById(cart.id))
+    // );
 
     return carts;
   } catch (error) {
@@ -85,11 +125,12 @@ async function getAllCarts() {
   }
 }
 
+
 //WORKING IN SEED.JS
 async function getCartByEmail(email) {
   try {
     const {
-      rows: [cart],
+      rows,
     } = await client.query(
       `
         SELECT cart.*, users.email AS "email"
@@ -98,8 +139,9 @@ async function getCartByEmail(email) {
         WHERE email=$1`,
       [email]
     );
+    const fullCart = await attachedProductsToCart(rows)
 
-    return cart;
+    return fullCart;
   } catch (error) {
     throw error;
   }
@@ -109,14 +151,16 @@ async function getCartByEmail(email) {
 async function getCartById(cartId) {
   try {
     const {
-      rows: [cart],
+      rows,
     } = await client.query(
       `SELECT *
         FROM cart
         WHERE id=$1`,
       [cartId]
     );
-    return cart;
+      const fullCart = await attachedProductsToCart(rows)
+
+    return fullCart;
   } catch (error) {
     throw error;
   }
@@ -126,7 +170,7 @@ async function getCartById(cartId) {
 async function getCartsByUserId(user_id) {
   try {
     const {
-      rows: [cart],
+      rows,
     } = await client.query(
       `
           SELECT cart.*, users.id AS "user_id"
@@ -135,8 +179,9 @@ async function getCartsByUserId(user_id) {
           WHERE user_id=$1`,
       [user_id]
     );
+    const fullCart = await attachedProductsToCart(rows)
 
-    return cart;
+    return fullCart;
   } catch (error) {
     throw error;
   }

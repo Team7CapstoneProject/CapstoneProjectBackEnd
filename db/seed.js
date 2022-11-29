@@ -352,21 +352,21 @@ async function testDB() {
     // const deletedCart = await deleteCart(3);
     // console.log("Result of deleteCart should be undefined", deletedCart)
 
-    // console.log("Calling getAllCarts");
-    // const allCarts = await getAllCarts();
-    // console.log("Result getAllCarts", allCarts);
+    console.log("Calling getAllCarts");
+    const allCarts = await getAllCarts();
+    console.log("Result getAllCarts", allCarts);
 
-    // console.log("calling getCartByEmail");
-    // const cartByEmail = await getCartByEmail("user@gmail.com");
-    // console.log("result getCartByEmail", cartByEmail);
+    console.log("calling getCartByEmail");
+    const cartByEmail = await getCartByEmail("user@gmail.com");
+    console.log("result getCartByEmail", cartByEmail);
 
-    // console.log("calling getCartById");
-    // const cartById = await getCartById(1);
-    // console.log("result getCartById", cartById);
+    console.log("calling getCartById");
+    const cartById = await getCartById(1);
+    console.log("result getCartById", cartById);
 
-    // console.log("Calling getCartsByUserId");
-    // const cartsByUserId = await getCartsByUserId(2);
-    // console.log("Result getCartsByUserId", cartsByUserId);
+    console.log("Calling getCartsByUserId");
+    const cartsByUserId = await getCartsByUserId(2);
+    console.log("Result getCartsByUserId", cartsByUserId);
 
     // console.log("calling updateCartCompletion");
     // const updateCart = await updateCartCompletion(2);
