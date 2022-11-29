@@ -53,7 +53,7 @@ cartRouter.post("/:cart_id/products", requireUser, async (req, res, next) => {
 
 //CREATES NEW CART : WORKING
 // POST /api/carts/:userId ---------------------------------------------------------
-cartRouter.post("/:user_id", requireUser, async (req, res, next) => {
+cartRouter.post("/:user_id", async (req, res, next) => {
   const { user_id } = req.params;
 
   try {
