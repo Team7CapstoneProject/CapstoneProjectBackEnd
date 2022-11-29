@@ -76,7 +76,7 @@ async function createTables() {
             id SERIAL PRIMARY KEY,
             name VARCHAR(225) UNIQUE NOT NULL,
             description TEXT,
-            price INTEGER,
+            price DECIMAL,
             image_url VARCHAR(225),
             inventory INTEGER,
             on_sale BOOLEAN DEFAULT false,
