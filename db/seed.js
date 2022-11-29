@@ -138,34 +138,33 @@ async function createInitialProducts() {
   try {
     console.log("Starting to create Products...");
     const guitar = await createProduct({
-      name: "guitar",
+      name: "Fender Guitar",
       description: "test",
       price: 100.0,
       image_url: "www.testurl.com",
       inventory: 1,
       on_sale: true,
-      sale_percentage: 20
+      sale_percentage: 20,
     });
 
     const bassGuitar = await createProduct({
       name: "Bass Guitar",
       description: "The bassiest of bass guitars",
-      price: 800.90,
+      price: 800.9,
       image_url: "www.testurl.com",
       inventory: 87,
       on_sale: true,
-      sale_percentage: 90
+      sale_percentage: 90,
     });
 
-  
     const piano = await createProduct({
-      name: "piano",
-      description: "test",
+      name: "Steinway Piano",
+      description: "Sounds like angels farting",
       price: 1000.0,
       image_url: "www.testurl.com",
       inventory: 1,
       on_sale: false,
-      sale_percentage: null
+      sale_percentage: null,
     });
     const violin = await createProduct({
       name: "violin",
@@ -174,7 +173,7 @@ async function createInitialProducts() {
       image_url: "www.testurl.com",
       inventory: 1,
       on_sale: false,
-      sale_percentage: 0
+      sale_percentage: 0,
     });
 
     const cello = await createProduct({
@@ -184,14 +183,13 @@ async function createInitialProducts() {
       image_url: "www.testurl.com",
       inventory: 8,
       on_sale: false,
-      sale_percentage: 0
+      sale_percentage: 0,
     });
 
     // console.log(guitar, "this is guitar");
     // console.log(piano, "this is piano");
     // console.log(violin, "this is violin");
     // console.log(cello, "this is cello");
-
 
     console.log("Finished creating Products");
   } catch (error) {
@@ -261,7 +259,6 @@ async function createInitialCartProducts() {
       quantity: 1,
     });
     //cart 2, banjo, x4
-
 
     // console.log(cartProduct1)
     console.log("Finished creating CartProducts!");
