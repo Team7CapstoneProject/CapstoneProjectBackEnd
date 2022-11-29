@@ -16,21 +16,18 @@ cartRouter.post("/:cart_id/products", requireUser, async (req, res, next) => {
   const { cart_id } = req.params;
   const { product_id, quantity } = req.body;
 
-  //Gets the cart and arrays all the products
   const cartArray = await getCartProductByCart(cart_id);
   console.log(cartArray, "this is cart array");
-  //Declare exists variable
   let exists = false;
-  //Goes through all the products in the cart and checks if the product that's being put in already exists
+
   cartArray.forEach((cart_product) => {
     if (cart_product.product_id === product_id) {
       exists = true;
     }
   });
   try {
-    //If the product already exists in the cart, it throws an error.
     if (exists) {
-      res.status(400)
+      res.status(400);
       return next({
         name: "ProductExistsInCartError",
         message: `Product with ID ${product_id} already exists in cart with ID ${cart_id}`,
