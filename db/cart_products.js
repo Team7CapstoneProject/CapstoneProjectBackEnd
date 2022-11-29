@@ -3,35 +3,37 @@ const client = require("./client");
 
 //check later to ensure functionality on this function
 //this is for any functions that are calling for cart data that need products included in data result
-// async function attachProductsToCart(carts) {
-//   const cartsToReturn = [...carts];
-//   const binds = carts.map((_, index) => `$${index + 1}`).join(", ");
-//   const cartIds = carts.map((cart) => cart.id);
-//   if (!cartIds?.length) return [];
+async function attachProductsToCart(carts) {
+  const cartsToReturn = [...carts];
+  const binds = carts.map((_, index) => `$${index + 1}`).join(", ");
+  const cartIds = carts.map((cart) => cart.id);
+  if (!cartIds?.length) return [];
 
-//   try {
-//     const { rows: products } = await client.query(
-//       `
-//       SELECT products.*, cart_products.quantity, cart_products.id AS "cartProductId", cart_products.cart_id
-//       FROM products
-//       JOIN cart_products ON cart_products.product_id = products.id
-//       WHERE cart_products.cart_id IN (${binds});
-//     `,
-//       cartIds
-//     );
+  try {
+    const { rows: products } = await client.query(
+      `
+      SELECT products.*, cart_products.quantity, cart_products.id AS "cartProductId", cart_products.cart_id
+      FROM products
+      JOIN cart_products ON cart_products.product_id = products.id
+      WHERE cart_products.cart_id IN (${binds});
+    `,
+      cartIds
+    );
 
-//     for (const cart of cartsToReturn) {
-//       const productsToAdd = products.filter(
-//         (product) => product.cart_id === cart.id
-//       );
-//       cart.products = productsToAdd;
-//     }
-//     // console.log("cart to return", cartsToReturn)
-//     return cartsToReturn;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+    for (const cart of cartsToReturn) {
+      const productsToAdd = products.filter(
+        (product) => product.cart_id === cart.id
+      );
+      cart.products = productsToAdd;
+    }
+    return cartsToReturn;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+
 
 //WORKING IN SEED.JS
 async function canEditCartProduct(cartProductId, userId) {
@@ -70,6 +72,22 @@ async function deleteCartProduct(cartProductId) {
     }
 
     return cartProduct;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// CURRENTLY WORKING ON
+async function getAllCartProducts(cart_id){
+  try {
+    const { rows: cart } = await client.query(`
+    SELECT cart.*, cart_products.* AS "products"
+    FROM cart
+    JOIN cart_products ON cart.products = cart_products.*
+    `)
+    
+
+    return cartProducts
   } catch (error) {
     throw error;
   }
@@ -127,7 +145,7 @@ async function updateCartProductQuantity(cartProductId, quantity) {
 }
 
 module.exports = {
-  // attachProductsToCart,
+  attachProductsToCart,
   canEditCartProduct,
   deleteCartProduct,
   getCartProductByCart,
