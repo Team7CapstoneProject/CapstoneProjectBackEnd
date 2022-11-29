@@ -146,6 +146,18 @@ async function createInitialProducts() {
       on_sale: true,
       sale_percentage: 20
     });
+
+    const bassGuitar = await createProduct({
+      name: "Bass Guitar",
+      description: "The bassiest of bass guitars",
+      price: 800.90,
+      image_url: "www.testurl.com",
+      inventory: 87,
+      on_sale: true,
+      sale_percentage: 90
+    });
+
+  
     const piano = await createProduct({
       name: "piano",
       description: "test",
