@@ -65,7 +65,7 @@ cartRouter.post("/:user_id", requireUser, async (req, res, next) => {
 });
 
 //GET MY CART BY EMAIL : WORKING
-// GET /api/carts/myCart ---------------------------------------------------------
+// GET /api/carts/myCartByEmail ---------------------------------------------------------
 cartRouter.get("/myCartByEmail", requireUser, async (req, res, next) => {
   try {
     let email = req.user.email;
