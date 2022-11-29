@@ -143,14 +143,14 @@ async function getCartsByUserId(user_id) {
 }
 
 //WORKING IN SEED.JS
-async function updateCartCompletion(id) {
+async function updateCartCompletion(cart_id) {
   try {
     const {
       rows: [cart],
     } = await client.query(`
         UPDATE cart
         SET is_complete=true
-        WHERE id=${id}
+        WHERE id=${cart_id}
         RETURNING *
         `);
     return cart;
