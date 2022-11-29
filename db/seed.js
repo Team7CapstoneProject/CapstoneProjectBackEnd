@@ -146,7 +146,6 @@ async function createInitialProducts() {
       on_sale: true,
       sale_percentage: 20,
     });
-
     const bassGuitar = await createProduct({
       name: "Bass Guitar",
       description: "The bassiest of bass guitars",
@@ -156,7 +155,6 @@ async function createInitialProducts() {
       on_sale: true,
       sale_percentage: 90,
     });
-
     const piano = await createProduct({
       name: "Steinway Piano",
       description: "Sounds like angels farting",
@@ -175,7 +173,6 @@ async function createInitialProducts() {
       on_sale: false,
       sale_percentage: 0,
     });
-
     const cello = await createProduct({
       name: "cello",
       description: "test",
