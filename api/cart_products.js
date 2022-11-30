@@ -7,7 +7,20 @@ const {
   getCartById,
   getCartProductById,
   updateCartProductQuantity,
+  getCartProductByCart,
 } = require("../db");
+
+//GET CART_PRODUCTS
+//GET /api/cart_products
+cartProductsRouter.get(
+  "/",
+  async (req, res, next) => {
+    const { cartId } = req.body
+    const cartProducts = await getCartProductByCart(cartId)
+
+    res.send(cartProducts)
+  }
+)
 
 //UPDATE CART PRODUCT QUANTITY : WORKING
 //PATCH /api/cart_products/:cartProductId------------------------------------------

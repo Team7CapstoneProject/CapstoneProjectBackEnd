@@ -140,9 +140,9 @@ async function createInitialProducts() {
   try {
     console.log("Starting to create Products...");
     const guitar = await createProduct({
-      name: "Fender Guitar",
-      description: "test",
-      price: 100.0,
+      name: "Epiphone Les Paul",
+      description: "The most beautiful guitar you will ever see!",
+      price: 1000000.0,
       image_url: "https://res.cloudinary.com/dd92xuflc/image/upload/v1669835778/20221130_131343_f7rbcb.jpg",
       inventory: 1,
       on_sale: true,
