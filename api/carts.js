@@ -1,5 +1,6 @@
 const express = require("express");
 const {
+  attachProductsToCart,
   addProductToCart,
   createCart,
   deleteCart,
@@ -37,18 +38,54 @@ cartRouter.post("/:cart_id/products", requireUser, async (req, res, next) => {
       });
       //Else it adds the product to the cart.
     } else {
-      let addedProductToCart = await addProductToCart({
+      await addProductToCart({
         cart_id,
         product_id,
         quantity,
       });
-
-      res.send(addedProductToCart);
+      let cart = await getCartById(cart_id)
+      res.send(cart);
     }
   } catch (error) {
     throw error;
   }
 });
+
+//attach product to cart
+// cartRouter.post("/:cart_id/products", requireUser, async (req, res, next) => {
+//   const { cart_id } = req.params;
+//   const { product_id } = req.body;
+
+//   const cartArray = await getCartProductByCart(cart_id);
+//   console.log(cartArray, "this is cart array");
+//   let exists = false;
+
+//   cartArray.forEach((cart_product) => {
+//     if (cart_product.product_id === product_id) {
+//       exists = true;
+//     }
+//   });
+//   try {
+//     if (exists) {
+//       res.status(400);
+//       return next({
+//         name: "ProductExistsInCartError",
+//         message: `Product with ID ${product_id} already exists in cart with ID ${cart_id}`,
+//         error: "ProductExistsInCartError",
+//       });
+//       //Else it adds the product to the cart.
+//     } else {
+//       let addedProductToCart = await attachProductsToCart({
+//         cartArray
+//       });
+
+//       res.send(addedProductToCart);
+//     }
+//   } catch (error) {
+//     throw error;
+//   }
+// });
+
 
 
 //CREATES NEW CART : WORKING
