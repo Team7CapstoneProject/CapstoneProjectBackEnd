@@ -3,7 +3,13 @@ const usersRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = process.env;
 const { requireUser } = require("./utils");
-const { getUserByEmail, createUser, getUser, deleteUser } = require("../db");
+const {
+  getUserByEmail,
+  createUser,
+  getUser,
+  deleteUser,
+  getUserById,
+} = require("../db");
 
 //LOGIN USER : WORKING
 //POST /api/users/login-----------------------------------------------------
@@ -105,8 +111,10 @@ usersRouter.get("/me", requireUser, async (req, res, next) => {
 //DELETE /api/users/me-----------------------------------------------------
 usersRouter.delete("/me", requireUser, async (req, res, next) => {
   try {
-    const deletedUser = await deleteUser(req.user.id);
-    res.send(deletedUser);
+    await deleteUser(req.user.id);
+    res.send({
+      message: `User with ID ${req.user.id} has been deleted`,
+    });
   } catch (error) {
     next(error);
   }
