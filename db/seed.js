@@ -357,6 +357,8 @@ async function testDB() {
     // console.log("Calling getAllCarts");
     // const allCarts = await getAllCarts();
     // console.log("Result getAllCarts", allCarts);
+    // const productData = allCarts[0].products
+    // console.log("product data for cart 1!!", productData)
 
     // console.log("calling getCartByEmail");
     // const cartByEmail = await getCartByEmail("user@gmail.com");
