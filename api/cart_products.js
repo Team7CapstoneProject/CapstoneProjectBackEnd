@@ -1,4 +1,6 @@
 const express = require("express");
+const cartProductsRouter = express.Router();
+const { requireUser } = require("./utils");
 const {
   canEditCartProduct,
   deleteCartProduct,
@@ -6,8 +8,6 @@ const {
   getCartProductById,
   updateCartProductQuantity,
 } = require("../db");
-const cartProductsRouter = express.Router();
-const { requireUser } = require("./utils");
 
 //UPDATE CART PRODUCT QUANTITY : WORKING
 //PATCH /api/cart_products/:cartProductId------------------------------------------

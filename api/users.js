@@ -3,7 +3,7 @@ const usersRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = process.env;
 const { requireUser } = require("./utils");
-const { getUserByEmail, createUser, getUser } = require("../db");
+const { getUserByEmail, createUser, getUser, deleteUser } = require("../db");
 
 //LOGIN USER : WORKING
 //POST /api/users/login-----------------------------------------------------
@@ -96,6 +96,17 @@ usersRouter.post("/register", async (req, res, next) => {
 usersRouter.get("/me", requireUser, async (req, res, next) => {
   try {
     res.send(req.user);
+  } catch (error) {
+    next(error);
+  }
+});
+
+//DELETE MY ACCOUNT : WORKING
+//DELETE /api/users/me-----------------------------------------------------
+usersRouter.delete("/me", requireUser, async (req, res, next) => {
+  try {
+    const deletedUser = await deleteUser(req.user.id);
+    res.send(deletedUser);
   } catch (error) {
     next(error);
   }
