@@ -1,5 +1,6 @@
 const client = require("./client");
 const bcrypt = require("bcrypt");
+const { getCartsByUserId } = require("./cart");
 
 //WORKING IN SEED.JS
 async function createUser({
@@ -7,7 +8,7 @@ async function createUser({
   last_name,
   password,
   email,
-  is_admin
+  is_admin,
 }) {
   const SALT_COUNT = 10;
   const hashedPassword = await bcrypt.hash(password, SALT_COUNT);
@@ -34,19 +35,29 @@ async function createUser({
 //WORKING IN SEED.JS
 async function deleteUser(userId) {
   try {
-    await client.query(`
-        DELETE
-        from cart
-        WHERE user_id=${userId}
-        RETURNING *`);
+    let cart = await getCartsByUserId(userId);
+    let cartId = cart[0].id;
 
     await client.query(`
-        DELETE
-        from users
-        WHERE id=${userId}
-        RETURNING *`);
+      DELETE
+      FROM cart_products
+      WHERE cart_id=${cartId}
+      RETURNING *`);
+
+    await client.query(`
+      DELETE
+      from cart
+      WHERE user_id=${userId}
+      RETURNING *`);
+
+    await client.query(`
+      DELETE
+      from users
+      WHERE id=${userId}
+      RETURNING *`);
 
     let user = await getUserById(userId);
+
     if (!user) {
       console.log(`User with userId ${userId} was deleted`);
     } else {
@@ -122,7 +133,7 @@ async function getUserById(userId) {
         FROM users
         WHERE id=${userId}`);
 
-    delete user.password;
+    // delete user.password;
     return user;
   } catch (error) {
     throw error;
