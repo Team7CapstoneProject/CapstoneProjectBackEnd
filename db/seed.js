@@ -352,21 +352,23 @@ async function testDB() {
     // const deletedCart = await deleteCart(3);
     // console.log("Result of deleteCart should be undefined", deletedCart)
 
-    console.log("Calling getAllCarts");
-    const allCarts = await getAllCarts();
-    console.log("Result getAllCarts", allCarts);
+    // console.log("Calling getAllCarts");
+    // const allCarts = await getAllCarts();
+    // console.log("Result getAllCarts", allCarts);
+    // const productData = allCarts[0].products
+    // console.log("product data for cart 1!!", productData)
 
-    console.log("calling getCartByEmail");
-    const cartByEmail = await getCartByEmail("user@gmail.com");
-    console.log("result getCartByEmail", cartByEmail);
+    // console.log("calling getCartByEmail");
+    // const cartByEmail = await getCartByEmail("user@gmail.com");
+    // console.log("result getCartByEmail", cartByEmail);
 
-    console.log("calling getCartById");
-    const cartById = await getCartById(1);
-    console.log("result getCartById", cartById);
+    // console.log("calling getCartById");
+    // const cartById = await getCartById(1);
+    // console.log("result getCartById", cartById);
 
-    console.log("Calling getCartsByUserId");
-    const cartsByUserId = await getCartsByUserId(2);
-    console.log("Result getCartsByUserId", cartsByUserId);
+    // console.log("Calling getCartsByUserId");
+    // const cartsByUserId = await getCartsByUserId(2);
+    // console.log("Result getCartsByUserId", cartsByUserId);
 
     // console.log("calling updateCartCompletion");
     // const updateCart = await updateCartCompletion(2);
@@ -376,15 +378,17 @@ async function testDB() {
 
     // console.log("Calling canEditCartProduct");
     // const canEditIsTrue = await canEditCartProduct(1, 1);
-    // console.log("Result canEditCartProduct should be true", canEditIsTrue);
+    // console.log("Result canEditCartProduct should be true?", canEditIsTrue);
 
     // console.log("Calling canEditCartProduct");
     // const canEditIsFalse = await canEditCartProduct(4, 1);
-    // console.log("Result canEditCartProduct should be false", canEditIsFalse);
+    // console.log("Result canEditCartProduct should be false?", canEditIsFalse);
 
     // console.log("Calling deleteCartProduct");
     // const deletedCartProduct = await deleteCartProduct(4);
-    // console.log("Result deleteCartProduct should be undefined", deletedCartProduct);
+    // console.log("Result deleteCartProduct:", deletedCartProduct);
+    // const deletedCartProductCheck = await getCartProductByCart(4);
+    // console.log("check for cartProduct deleted:", deletedCartProductCheck)
 
     // console.log("Calling getCartProductByCart");
     // const cartProduct = await getCartProductByCart(1);
