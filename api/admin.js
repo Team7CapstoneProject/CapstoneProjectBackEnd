@@ -104,26 +104,6 @@ adminRouter.get("/users", requireAdmin, async (req, res, next) => {
   }
 });
 
-//GET USER BY USER ID : WORKING
-//GET /api/admin/users/:userId--------------------------------------------------------
-adminRouter.get("/users/:userId", requireAdmin, async (req, res, next) => {
-  const { userId } = req.params;
-  const user = await getUserById(userId);
-
-  try {
-    if (user) {
-      res.send(user);
-    } else {
-      res.send({
-        name: "UserNotFoundError",
-        message: `User with ID ${userId} not found.`,
-        error: "UserNotFoundError",
-      });
-    }
-  } catch (error) {
-    next(error);
-  }
-});
 
 //UPDATE PRODUCT : WORKING
 //PATCH /api/admin/products/:productId--------------------------------------------------
