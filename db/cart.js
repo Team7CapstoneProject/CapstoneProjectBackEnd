@@ -56,15 +56,6 @@ async function deleteCart(cartId) {
        FROM cart
        WHERE id=${cartId}
        RETURNING *`);
-
-    let cart = await getCartById(cartId);
-    if (!cart) {
-      console.log(`Cart with ID ${cartId} was deleted`);
-    } else {
-      `Cart with cartId ${cartId} was not deleted`;
-    }
-
-    return cart;
   } catch (error) {
     throw error;
   }
@@ -93,7 +84,7 @@ async function attachedProductsToCart(carts) {
   const binds = carts.map((_, index) => `$${index + 1}`).join(", ");
   // console.log("set string!!!", binds)
   const cartIds = carts.map((cart) => cart.id);
-  console.log("cartId data", cartIds)
+  // console.log("cartId data", cartIds)
   if (!cartIds?.length) return [];
   try {
     const { rows: products } = await client.query(

@@ -32,30 +32,23 @@ cartProductsRouter.patch(
     const { quantity } = req.body;
 
     const isCartOwner = await canEditCartProduct(cartProductId, req.user.id);
-
-    const selectedCartProduct = await getCartProductById(cartProductId);
-    const cart = await getCartById(selectedCartProduct.cart_id);
-    const originalCartOwner = cart.user_id;
-    console.log(
-      `User with ID ${originalCartOwner} is the original cart owner. User with ID ${req.user.id} is trying to update cartProducts`
-    );
-
+console.log(isCartOwner, "isCartOwner")
     try {
       if (isCartOwner) {
         let updatedCartProduct = await updateCartProductQuantity(
           cartProductId,
           quantity
         );
-        res.send(updatedCartProduct);
+        res.send(updatedCartProduct, {message: "Product quantity has been updated"});
       } else {
         res.status(403);
         next({
           name: "OwnerUserError",
-          message: `User with ID ${req.user.id} is not allowed to update cart owned by user with ID ${originalCartOwner}`,
+          message: `User does not own this cart.`,
         });
       }
     } catch (error) {
-      next(error);
+      throw error;
     }
   }
 );
@@ -89,7 +82,7 @@ cartProductsRouter.delete(
         });
       }
     } catch (error) {
-      next(error);
+      throw error;
     }
   }
 );

@@ -34,7 +34,8 @@ adminRouter.post("/products", requireAdmin, async (req, res, next) => {
       res.status(400);
       return next({
         name: "ProductExistsError",
-        message: `A product with name "${name}" already exists`,
+        message: `A product ${name} already exists`,
+        error: "ProductExistsError",
       });
     }
 
@@ -47,6 +48,7 @@ adminRouter.post("/products", requireAdmin, async (req, res, next) => {
       return next({
         name: "SalePercentageError",
         message: `Sale percentage must be between 0-100.`,
+        error: "SalePercentageError",
       });
     }
 
@@ -72,10 +74,9 @@ adminRouter.post("/products", requireAdmin, async (req, res, next) => {
 adminRouter.get("/carts", requireAdmin, async (req, res, next) => {
   try {
     const allCarts = await getAllCarts();
-
     res.send(allCarts);
   } catch (error) {
-    next(error);
+    throw error;
   }
 });
 
@@ -85,10 +86,9 @@ adminRouter.get("/carts", requireAdmin, async (req, res, next) => {
 adminRouter.get("/products", requireAdmin, async (req, res, next) => {
   try {
     const allProducts = await getAllProducts();
-
     res.send(allProducts);
   } catch (error) {
-    next(error);
+    throw error;
   }
 });
 
@@ -97,13 +97,19 @@ adminRouter.get("/products", requireAdmin, async (req, res, next) => {
 adminRouter.get("/users", requireAdmin, async (req, res, next) => {
   try {
     const allUsers = await getAllUsers();
-
-    res.send(allUsers);
+    if (allUsers) {
+      res.send(allUsers);
+    } else {
+      return next({
+        name: "AllUsersError",
+        message: "Failed to get all users",
+        error: "AllUsersError",
+      });
+    }
   } catch (error) {
-    next(error);
+    throw error;
   }
 });
-
 
 //UPDATE PRODUCT : WORKING
 //PATCH /api/admin/products/:productId--------------------------------------------------
@@ -121,40 +127,43 @@ adminRouter.patch(
       on_sale,
       sale_percentage,
     } = req.body;
-    const product = await getProductById(productId);
-
-    if (on_sale === false) {
-      sale_percentage = null;
-    }
-
-    if (sale_percentage && (sale_percentage > 100 || sale_percentage < 0)) {
-      res.status(400);
-      return next({
-        name: "SalePercentageError",
-        message: `Sale percentage must be between 0-100.`,
-      });
-    }
-
-    const updateFields = {};
-    updateFields.name = name;
-    updateFields.description = description;
-    updateFields.price = price;
-    updateFields.image_url = image_url;
-    updateFields.inventory = inventory;
-    updateFields.on_sale = on_sale;
-    updateFields.sale_percentage = sale_percentage;
 
     try {
+      const product = await getProductById(productId);
+
       if (!product) {
+        res.status(400);
         next({
           name: "ProductNotFoundError",
           message: `Product with ID ${productId} not found.`,
           error: "ProductNotFoundError",
         });
-      } else {
-        const updatedProduct = await updateProduct(productId, updateFields);
-        res.send(updatedProduct);
       }
+
+      if (on_sale === false) {
+        sale_percentage = null;
+      }
+
+      if (sale_percentage && (sale_percentage > 100 || sale_percentage < 0)) {
+        res.status(400);
+        return next({
+          name: "SalePercentageError",
+          message: `Sale percentage must be between 0-100.`,
+          error: "SalePercentageError",
+        });
+      }
+
+      const updateFields = {};
+      updateFields.name = name;
+      updateFields.description = description;
+      updateFields.price = price;
+      updateFields.image_url = image_url;
+      updateFields.inventory = inventory;
+      updateFields.on_sale = on_sale;
+      updateFields.sale_percentage = sale_percentage;
+
+      const updatedProduct = await updateProduct(productId, updateFields);
+      res.send(updatedProduct);
     } catch (error) {
       throw error;
     }
@@ -168,16 +177,24 @@ adminRouter.delete(
   requireAdmin,
   async (req, res, next) => {
     const { productId } = req.params;
-    const product = await getProductById(productId);
-
     try {
+      const product = await getProductById(productId);
       if (product) {
         await deleteProduct(productId);
-        res.send(`Product with ID "${productId}" was deleted.`);
+        const _product = await getProductById(productId);
+        if (!_product) {
+          res.send({ message: `Product ${productId} was deleted.` });
+        } else {
+          return next({
+            name: "ProductFailedToDeleteError",
+            message: `This product failed to delete.`,
+            error: "ProductFailedToDeleteError",
+          });
+        }
       } else {
-        res.send({
+        return next({
           name: "ProductNotFoundError",
-          message: `Product with ID ${productId} not found.`,
+          message: `Product not found.`,
           error: "ProductNotFoundError",
         });
       }
@@ -190,14 +207,32 @@ adminRouter.delete(
 //DELETE USER ACCOUNT : WORKING
 //DELETE /api/admin/users/:userId-----------------------------------------------------
 adminRouter.delete("/users/:userId", requireAdmin, async (req, res, next) => {
-  const {userId} = req.params
+  const { userId } = req.params;
   try {
-    await deleteUser(userId);
-    res.send({
-      message: `User with ID ${userId} has been deleted`,
-    });
+    let user = await getUserById(userId);
+    if (user) {
+      await deleteUser(userId);
+      let _user = await getUserById(userId);
+      if (!_user) {
+        res.send({
+          message: `User ${userId} has been deleted`,
+        });
+      } else {
+        return next({
+          name: "UserDeleteError",
+          message: "Failed to delete user",
+          error: "UserDeleteError",
+        });
+      }
+    } else {
+      return next({
+        name: "UserNotFoundError",
+        message: "This user does not exist",
+        error: "UserNotFoundError",
+      });
+    }
   } catch (error) {
-    next(error);
+    throw error;
   }
 });
 

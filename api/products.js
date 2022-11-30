@@ -11,7 +11,7 @@ productsRouter.get("/", async (req, res, next) => {
 
     res.send(allProducts);
   } catch (error) {
-    next(error);
+    throw error;
   }
 });
 
@@ -33,7 +33,7 @@ productsRouter.get("/:productId", async (req, res, next) => {
     }
 
   } catch (error) {
-    next(error);
+    throw error;
   }
 });
 

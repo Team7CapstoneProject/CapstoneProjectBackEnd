@@ -38,8 +38,7 @@ usersRouter.post("/login", async (req, res, next) => {
       });
     }
   } catch (error) {
-    console.log(error);
-    next(error);
+    throw error;
   }
 });
 
@@ -92,8 +91,8 @@ usersRouter.post("/register", async (req, res, next) => {
       token,
       user,
     });
-  } catch ({ name, message }) {
-    next({ name, message });
+  } catch (error) {
+    throw error;
   }
 });
 
@@ -103,7 +102,7 @@ usersRouter.get("/me", requireUser, async (req, res, next) => {
   try {
     res.send(req.user);
   } catch (error) {
-    next(error);
+    throw error;
   }
 });
 
@@ -124,7 +123,7 @@ usersRouter.get("/:userId", async (req, res, next) => {
       });
     }
   } catch (error) {
-    next(error);
+    throw error;
   }
 });
 
@@ -137,7 +136,7 @@ usersRouter.delete("/me", requireUser, async (req, res, next) => {
       message: `User with ID ${req.user.id} has been deleted`,
     });
   } catch (error) {
-    next(error);
+    throw error;
   }
 });
 
