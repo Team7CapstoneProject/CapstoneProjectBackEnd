@@ -65,6 +65,7 @@ cartProductsRouter.delete(
 
     const selectedCartProduct = await getCartProductById(cartProductId);
     const cart = await getCartById(selectedCartProduct.cart_id);
+
     const originalCartOwner = cart.user_id;
     console.log(
       `User with ID ${originalCartOwner} is the original cart owner. User with ID ${req.user.id} is trying to delete cartProducts. Is cart owner: ${isCartOwner}`
