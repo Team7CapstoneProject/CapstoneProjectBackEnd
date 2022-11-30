@@ -143,7 +143,7 @@ async function createInitialProducts() {
       name: "Fender Guitar",
       description: "test",
       price: 100.0,
-      image_url: "https://asset.cloudinary.com/dd92xuflc/cb3e7c16c723d41ade15f9ccd830fcb0",
+      image_url: "https://res.cloudinary.com/dd92xuflc/image/upload/v1669835778/20221130_131343_f7rbcb.jpg",
       inventory: 1,
       on_sale: true,
       sale_percentage: 20,
