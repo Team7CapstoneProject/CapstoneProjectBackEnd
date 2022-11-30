@@ -378,15 +378,17 @@ async function testDB() {
 
     // console.log("Calling canEditCartProduct");
     // const canEditIsTrue = await canEditCartProduct(1, 1);
-    // console.log("Result canEditCartProduct should be true", canEditIsTrue);
+    // console.log("Result canEditCartProduct should be true?", canEditIsTrue);
 
     // console.log("Calling canEditCartProduct");
     // const canEditIsFalse = await canEditCartProduct(4, 1);
-    // console.log("Result canEditCartProduct should be false", canEditIsFalse);
+    // console.log("Result canEditCartProduct should be false?", canEditIsFalse);
 
     // console.log("Calling deleteCartProduct");
     // const deletedCartProduct = await deleteCartProduct(4);
-    // console.log("Result deleteCartProduct should be undefined", deletedCartProduct);
+    // console.log("Result deleteCartProduct:", deletedCartProduct);
+    // const deletedCartProductCheck = await getCartProductByCart(4);
+    // console.log("check for cartProduct deleted:", deletedCartProductCheck)
 
     // console.log("Calling getCartProductByCart");
     // const cartProduct = await getCartProductByCart(1);

@@ -71,12 +71,30 @@ async function deleteCart(cartId) {
 }
 
 //working in GetAllCARTS ---- figure out why attachProductsToCart export is not working
+//function for attaching cart_products to cart data when called (if necessary)
+//passing in array of objects containing cart data objects
+//func is set up to work dynamically similar to previous funcs used previous projects
+//using a spread operator to make copy of array and accounting for various amounts of cart data objects that would be passed in
+//const binds is our set string (would look like $1, $2, $3, ...etc)
+//const cartIds is our array of cart ids we've drilled into from carts data
+//if statement here checks if cartIds array is null and has no length
+//if so return and empty array and exit program
+//else, run a client query, select all from products, cart products quantity/id/cart_id 
+//joining the cart_products table and products table on related product id key 
+//where cart_product.cart_id = cart_id (passed in via cartIds through set string
+//in our for statement, const productsToAdd is a copy of products array that we filter through to only take values where product.cart_id === cart.id
+//set cart.products = array of product data objects
+//return the whole cartsToReturn array of objects with relevant cart data and now attached relevant product data 
+//console logs in seed: lines 355-359
 async function attachedProductsToCart(carts) {
+  // console.log("cart data here!!!",carts)
   const cartsToReturn = [...carts];
+  // console.log("copy of carts data", cartsToReturn)
   const binds = carts.map((_, index) => `$${index + 1}`).join(", ");
+  // console.log("set string!!!", binds)
   const cartIds = carts.map((cart) => cart.id);
+  console.log("cartId data", cartIds)
   if (!cartIds?.length) return [];
-
   try {
     const { rows: products } = await client.query(
       `
