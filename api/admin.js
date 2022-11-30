@@ -4,6 +4,7 @@ const { requireAdmin } = require("./utils");
 const {
   createProduct,
   deleteProduct,
+  deleteUser,
   getAllCarts,
   getAllProducts,
   getAllUsers,
@@ -205,5 +206,19 @@ adminRouter.delete(
     }
   }
 );
+
+//DELETE USER ACCOUNT : WORKING
+//DELETE /api/admin/users/:userId-----------------------------------------------------
+adminRouter.delete("/users/:userId", requireAdmin, async (req, res, next) => {
+  const {userId} = req.params
+  try {
+    await deleteUser(userId);
+    res.send({
+      message: `User with ID ${userId} has been deleted`,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = adminRouter;
