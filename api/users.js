@@ -107,6 +107,27 @@ usersRouter.get("/me", requireUser, async (req, res, next) => {
   }
 });
 
+//GET USER BY USER ID : WORKING
+//GET /api/users/:userId--------------------------------------------------------
+usersRouter.get("/:userId", async (req, res, next) => {
+  const { userId } = req.params;
+  const user = await getUserById(userId);
+
+  try {
+    if (user) {
+      res.send(user);
+    } else {
+      res.send({
+        name: "UserNotFoundError",
+        message: `User with ID ${userId} not found.`,
+        error: "UserNotFoundError",
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
 //DELETE MY ACCOUNT : WORKING
 //DELETE /api/users/me-----------------------------------------------------
 usersRouter.delete("/me", requireUser, async (req, res, next) => {
