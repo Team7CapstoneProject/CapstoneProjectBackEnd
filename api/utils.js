@@ -4,6 +4,7 @@ function requireUser(req, res, next) {
     next({
       name: "MissingUserError",
       message: "You must be logged in to perform this action",
+      error: "MissingUserError",
     });
   }
   next();
@@ -15,6 +16,7 @@ function requireAdmin(req, res, next) {
     next({
       name: "MissingAdminError",
       message: "You must be an admin to perform this action",
+      error: "MissingAdminError",
     });
   }
   next();
@@ -22,5 +24,5 @@ function requireAdmin(req, res, next) {
 
 module.exports = {
   requireUser,
-  requireAdmin
+  requireAdmin,
 };

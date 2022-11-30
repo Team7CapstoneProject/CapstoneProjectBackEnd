@@ -16,9 +16,11 @@ const {
 usersRouter.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    next({
+    res.status(400)
+    return next({
       name: "MissingCredentialsError",
       message: "Please supply both an email and password",
+      error: "MissingCredentialsError",
     });
   }
   try {
@@ -29,12 +31,14 @@ usersRouter.post("/login", async (req, res, next) => {
         expiresIn: "1w",
       });
 
-      res.send({ message: "you're logged in!", token, user });
+      res.send({ message: "You're logged in!", token, user });
       return token;
     } else {
-      next({
+      res.status(400)
+      return next({
         name: "IncorrectCredentialsError",
         message: "Email or password is incorrect",
+        error: "IncorrectCredentialsError",
       });
     }
   } catch (error) {
@@ -50,18 +54,21 @@ usersRouter.post("/register", async (req, res, next) => {
   const existingUser = await getUserByEmail(email);
 
   if (existingUser) {
-    next({
+    res.status(400);
+    return next({
       name: "UserExistsError",
       message: `User with email ${email} is already taken.`,
+      error: "UserExistsError",
     });
   }
 
   try {
     if (password.length < 8) {
-      next({
+      res.status(400);
+      return next({
         name: "PasswordError",
         message: "Password must be 8 characters or more.",
-        error: "This is the error message",
+        error: "PasswordError",
       });
     }
 
@@ -73,10 +80,6 @@ usersRouter.post("/register", async (req, res, next) => {
       is_admin,
     });
 
-    if (!user.error) {
-      console.log(`${first_name} has successfully registered an account`);
-    }
-
     const token = jwt.sign(
       {
         id: user.id,
@@ -87,7 +90,7 @@ usersRouter.post("/register", async (req, res, next) => {
     );
 
     res.send({
-      message: "thank you for signing up",
+      message: "Thank you for signing up",
       token,
       user,
     });
@@ -100,7 +103,18 @@ usersRouter.post("/register", async (req, res, next) => {
 //GET /api/users/me-----------------------------------------------------
 usersRouter.get("/me", requireUser, async (req, res, next) => {
   try {
-    res.send(req.user);
+    if (req.user) {
+
+      delete req.user.password
+      res.send(req.user);
+    } else {
+      res.status(400);
+      return next({
+        name: "LogInError",
+        message: "You must be logged in to perform this action",
+        error: "LogInError",
+      });
+    }
   } catch (error) {
     throw error;
   }
