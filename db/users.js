@@ -56,15 +56,6 @@ async function deleteUser(userId) {
       WHERE id=${userId}
       RETURNING *`);
 
-    let user = await getUserById(userId);
-
-    if (!user) {
-      console.log(`User with userId ${userId} was deleted`);
-    } else {
-      `User with userId ${userId} was not deleted`;
-    }
-
-    return user;
   } catch (error) {
     throw error;
   }

@@ -8,7 +8,7 @@ async function createProduct({
   image_url,
   inventory,
   on_sale,
-  sale_percentage
+  sale_percentage,
 }) {
   try {
     const {
@@ -42,15 +42,6 @@ async function deleteProduct(productId) {
           FROM products
           WHERE id=${productId}
           RETURNING *`);
-
-    let product = await getProductById(productId);
-    if (!product) {
-      console.log(`Product with productId ${productId} was deleted`);
-    } else {
-      `Product with productId ${productId} was not deleted`;
-    }
-
-    return product;
   } catch (error) {
     throw error;
   }

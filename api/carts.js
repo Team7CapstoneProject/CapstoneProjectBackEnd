@@ -19,7 +19,6 @@ cartRouter.post("/:cart_id/products", requireUser, async (req, res, next) => {
   const { product_id, quantity } = req.body;
 
   const cartArray = await getCartProductByCart(cart_id);
-  console.log(cartArray, "this is cart array");
   let exists = false;
 
   cartArray.forEach((cart_product) => {
@@ -35,15 +34,16 @@ cartRouter.post("/:cart_id/products", requireUser, async (req, res, next) => {
         message: `Product with ID ${product_id} already exists in cart with ID ${cart_id}`,
         error: "ProductExistsInCartError",
       });
-      //Else it adds the product to the cart.
     } else {
-      let addedProductToCart = await addProductToCart({
+      await addProductToCart({
         cart_id,
         product_id,
         quantity,
       });
 
-      res.send(addedProductToCart);
+      let cart = await getCartById(cart_id)
+
+      res.send(cart);
     }
   } catch (error) {
     throw error;
@@ -59,8 +59,8 @@ cartRouter.post("/:user_id", async (req, res, next) => {
   try {
     const cart = await createCart({ user_id });
     res.send(cart);
-  } catch ({ name, message }) {
-    next({ name, message });
+  } catch (error) {
+    throw error;
   }
 });
 
@@ -73,7 +73,7 @@ cartRouter.get("/myCartByEmail", requireUser, async (req, res, next) => {
     console.log(cart, `this is all carts by ${req.user.first_name}`);
     res.send(cart);
   } catch (error) {
-    next(error);
+    throw error;
   }
 });
 
@@ -87,7 +87,7 @@ cartRouter.get("/myCartByUserId", requireUser, async (req, res, next) => {
     console.log(cart, `this is all carts by ${req.user.first_name}`);
     res.send(cart);
   } catch (error) {
-    next(error);
+    throw error;
   }
 });
 
@@ -99,7 +99,7 @@ cartRouter.patch("/:cart_id", requireUser, async (req, res, next) => {
     let updatedCartCompletion = await updateCartCompletion(cart_id);
     res.send(updatedCartCompletion);
   } catch (error) {
-    next(error);
+    throw error;
   }
 });
 
