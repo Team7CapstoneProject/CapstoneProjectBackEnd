@@ -118,6 +118,8 @@ async function createInitialUsers() {
       last_name: "user",
       password: "user",
       email: "user@gmail.com",
+      is_admin: false,
+
     });
     const userForDeletion = await createUser({
       first_name: "userForDeletion",
@@ -207,7 +209,7 @@ async function createInitialCarts() {
       // is_complete: false
     });
     const cart3 = await createCart({
-      user_id: 2,
+      user_id: 3,
       // is_complete: true
     });
 
@@ -355,8 +357,6 @@ async function testDB() {
     // console.log("Calling getAllCarts");
     // const allCarts = await getAllCarts();
     // console.log("Result getAllCarts", allCarts);
-    // const productData = allCarts[0].products
-    // console.log("product data for cart 1!!", productData)
 
     // console.log("calling getCartByEmail");
     // const cartByEmail = await getCartByEmail("user@gmail.com");
