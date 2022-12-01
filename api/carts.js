@@ -12,6 +12,15 @@ const {
 const cartRouter = express.Router();
 const { requireUser } = require("./utils");
 
+//GET CART_PRODUCTS
+//GET /api/carts/:cart_id/cart_products
+cartRouter.get("/:cartId/cart_products", async (req, res, next) => {
+  const { cartId } = req.params;
+  const cartProducts = await getCartProductByCart(cartId);
+
+  res.send(cartProducts);
+});
+
 //ADD PRODUCT TO CART : WORKING
 //POST /api/carts/:cart_id/products------------------------------------------------
 cartRouter.post("/:cart_id/products", requireUser, async (req, res, next) => {
