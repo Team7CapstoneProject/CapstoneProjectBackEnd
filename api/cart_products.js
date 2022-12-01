@@ -4,23 +4,19 @@ const { requireUser } = require("./utils");
 const {
   canEditCartProduct,
   deleteCartProduct,
-  getCartById,
+  getCartProductByCart,
   getCartProductById,
   updateCartProductQuantity,
-  getCartProductByCart,
 } = require("../db");
 
 //GET CART_PRODUCTS
 //GET /api/cart_products
-cartProductsRouter.get(
-  "/",
-  async (req, res, next) => {
-    const { cartId } = req.body
-    const cartProducts = await getCartProductByCart(cartId)
+cartProductsRouter.get("/", async (req, res, next) => {
+  const { cartId } = req.body;
+  const cartProducts = await getCartProductByCart(cartId);
 
-    res.send(cartProducts)
-  }
-)
+  res.send(cartProducts);
+});
 
 //UPDATE CART PRODUCT QUANTITY : WORKING
 //PATCH /api/cart_products/:cartProductId------------------------------------------
@@ -31,20 +27,21 @@ cartProductsRouter.patch(
     const { cartProductId } = req.params;
     const { quantity } = req.body;
 
-    const isCartOwner = await canEditCartProduct(cartProductId, req.user.id);
-console.log(isCartOwner, "isCartOwner")
     try {
+      const isCartOwner = await canEditCartProduct(cartProductId, req.user.id);
+
       if (isCartOwner) {
         let updatedCartProduct = await updateCartProductQuantity(
           cartProductId,
           quantity
         );
-        res.send(updatedCartProduct, {message: "Product quantity has been updated"});
+        res.send(updatedCartProduct);
       } else {
         res.status(403);
-        next({
+        return next({
           name: "OwnerUserError",
-          message: `User does not own this cart.`,
+          message: `User ${req.user.id} does not own this cart product`,
+          error: "OwnerUserError",
         });
       }
     } catch (error) {
@@ -60,26 +57,30 @@ cartProductsRouter.delete(
   requireUser,
   async (req, res, next) => {
     const { cartProductId } = req.params;
-
-    const isCartOwner = await canEditCartProduct(cartProductId, req.user.id);
-
-    const selectedCartProduct = await getCartProductById(cartProductId);
-    const cart = await getCartById(selectedCartProduct.cart_id);
-
-    const originalCartOwner = cart.user_id;
-    console.log(
-      `User with ID ${originalCartOwner} is the original cart owner. User with ID ${req.user.id} is trying to delete cartProducts. Is cart owner: ${isCartOwner}`
-    );
-
     try {
+      const isCartOwner = await canEditCartProduct(cartProductId, req.user.id);
+
       if (isCartOwner) {
-        let deletedCartProduct = await deleteCartProduct(cartProductId);
-        res.send(deletedCartProduct);
+        await deleteCartProduct(cartProductId);
+
+        let cartProduct = await getCartProductById(cartProductId);
+        if (!cartProduct) {
+          res.send({
+            message: `Cart product ${cartProductId} has been deleted`,
+          });
+        } else {
+          return next({
+            name: "DeleteCartProductError",
+            message: `Error deleting cart product.`,
+            error: "DeleteCartProductError",
+          });
+        }
       } else {
         res.status(403);
-        next({
+        return next({
           name: "OwnerUserError",
-          message: `User with ID ${req.user.id} is not allowed to delete cart owned by user with ID ${originalCartOwner}`,
+          message: `User ${req.user.id} does not own this cart product`,
+          error: "OwnerUserError",
         });
       }
     } catch (error) {

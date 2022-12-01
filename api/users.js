@@ -15,17 +15,28 @@ const {
 //POST /api/users/login-----------------------------------------------------
 usersRouter.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    res.status(400)
-    return next({
-      name: "MissingCredentialsError",
-      message: "Please supply both an email and password",
-      error: "MissingCredentialsError",
-    });
-  }
-  try {
-    const user = await getUser({ email, password });
 
+  try {
+    if (!email || !password) {
+      res.status(400);
+      return next({
+        name: "MissingCredentialsError",
+        message: "Please supply both an email and password.",
+        error: "MissingCredentialsError",
+      });
+    }
+
+    const userEmailCheck = await getUserByEmail(email);
+    if (!userEmailCheck) {
+      res.status(403);
+      return next({
+        name: "IncorrectCredentialsError",
+        message: "Email or password is incorrect.",
+        error: "IncorrectCredentialsError",
+      });
+    }
+
+    const user = await getUser({ email, password });
     if (user) {
       const token = jwt.sign({ id: user.id, email }, JWT_SECRET, {
         expiresIn: "1w",
@@ -34,10 +45,10 @@ usersRouter.post("/login", async (req, res, next) => {
       res.send({ message: "You're logged in!", token, user });
       return token;
     } else {
-      res.status(400)
+      res.status(403);
       return next({
         name: "IncorrectCredentialsError",
-        message: "Email or password is incorrect",
+        message: "Email or password is incorrect.",
         error: "IncorrectCredentialsError",
       });
     }
@@ -51,18 +62,17 @@ usersRouter.post("/login", async (req, res, next) => {
 usersRouter.post("/register", async (req, res, next) => {
   const { first_name, last_name, email, password, is_admin } = req.body;
 
-  const existingUser = await getUserByEmail(email);
-
-  if (existingUser) {
-    res.status(400);
-    return next({
-      name: "UserExistsError",
-      message: `User with email ${email} is already taken.`,
-      error: "UserExistsError",
-    });
-  }
-
   try {
+    const existingUser = await getUserByEmail(email);
+
+    if (existingUser) {
+      res.status(409);
+      return next({
+        name: "UserExistsError",
+        message: `User with email ${email} is already taken.`,
+        error: "UserExistsError",
+      });
+    }
     if (password.length < 8) {
       res.status(400);
       return next({
@@ -89,11 +99,22 @@ usersRouter.post("/register", async (req, res, next) => {
       { expiresIn: "1w" }
     );
 
-    res.send({
-      message: "Thank you for signing up",
-      token,
-      user,
-    });
+    const _user = await getUserByEmail(email);
+
+    if (_user) {
+      res.send({
+        message: "Thank you for signing up.",
+        token,
+        user,
+      });
+    } else {
+      res.status(400);
+      return next({
+        name: "UserRegisterError",
+        message: "Registration failed.",
+        error: "UserRegisterError",
+      });
+    }
   } catch (error) {
     throw error;
   }
@@ -104,15 +125,14 @@ usersRouter.post("/register", async (req, res, next) => {
 usersRouter.get("/me", requireUser, async (req, res, next) => {
   try {
     if (req.user) {
-
-      delete req.user.password
+      delete req.user.password;
       res.send(req.user);
     } else {
-      res.status(400);
+      res.status(401);
       return next({
-        name: "LogInError",
-        message: "You must be logged in to perform this action",
-        error: "LogInError",
+        name: "MissingUserError",
+        message: "You must be logged in to perform this action.",
+        error: "MissingUserError",
       });
     }
   } catch (error) {
@@ -124,13 +144,15 @@ usersRouter.get("/me", requireUser, async (req, res, next) => {
 //GET /api/users/:userId--------------------------------------------------------
 usersRouter.get("/:userId", async (req, res, next) => {
   const { userId } = req.params;
-  const user = await getUserById(userId);
-
+  
   try {
+    const user = await getUserById(userId);
+
     if (user) {
       res.send(user);
     } else {
-      res.send({
+      res.status(400);
+      return next({
         name: "UserNotFoundError",
         message: `User with ID ${userId} not found.`,
         error: "UserNotFoundError",
@@ -145,10 +167,22 @@ usersRouter.get("/:userId", async (req, res, next) => {
 //DELETE /api/users/me-----------------------------------------------------
 usersRouter.delete("/me", requireUser, async (req, res, next) => {
   try {
-    await deleteUser(req.user.id);
-    res.send({
-      message: `User with ID ${req.user.id} has been deleted`,
-    });
+    if (req.user.id) {
+      await deleteUser(req.user.id);
+      let _user = await getUserById(req.user.id);
+      if (!_user) {
+        res.send({
+          message: `Your account has been deleted.`,
+        });
+      } else {
+        res.status(400);
+        return next({
+          name: "UserDeleteError",
+          message: "Failed to delete user.",
+          error: "UserDeleteError",
+        });
+      }
+    }
   } catch (error) {
     throw error;
   }

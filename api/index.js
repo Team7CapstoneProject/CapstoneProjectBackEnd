@@ -57,4 +57,13 @@ apiRouter.use((error, req, res, next) => {
   });
 });
 
+//ROUTER: /api/unknown
+apiRouter.get("/:any", async (req, res) => {
+  const { any } = req.params;
+  if (any) {
+    res.status(404);
+    res.send({ message: "Darn, we haven't invented this page yet" });
+  }
+});
+
 module.exports = apiRouter;

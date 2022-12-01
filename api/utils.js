@@ -12,7 +12,7 @@ function requireUser(req, res, next) {
 
 function requireAdmin(req, res, next) {
   if (req.user.is_admin === false) {
-    res.status(401);
+    res.status(403);
     next({
       name: "MissingAdminError",
       message: "You must be an admin to perform this action",
