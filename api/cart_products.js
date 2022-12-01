@@ -9,14 +9,14 @@ const {
   updateCartProductQuantity,
 } = require("../db");
 
-//GET CART_PRODUCTS
-//GET /api/cart_products
-cartProductsRouter.get("/", async (req, res, next) => {
-  const { cartId } = req.body;
-  const cartProducts = await getCartProductByCart(cartId);
+// //GET CART_PRODUCTS
+// //GET /api/cart_products/:cart_id
+// cartProductsRouter.get("/:cartId", async (req, res, next) => {
+//   const { cartId } = req.params;
+//   const cartProducts = await getCartProductByCart(cartId);
 
-  res.send(cartProducts);
-});
+//   res.send(cartProducts);
+// });
 
 //UPDATE CART PRODUCT QUANTITY : WORKING
 //PATCH /api/cart_products/:cartProductId------------------------------------------
