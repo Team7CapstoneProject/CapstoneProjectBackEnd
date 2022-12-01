@@ -378,13 +378,13 @@ async function testDB() {
 
     //CART PRODUCT TESTS---------------------------------------------------
 
-    console.log("Calling canEditCartProduct");
-    const canEditIsTrue = await canEditCartProduct(1, 1);
-    console.log("Result canEditCartProduct should be true?", canEditIsTrue);
+    // console.log("Calling canEditCartProduct");
+    // const canEditIsTrue = await canEditCartProduct(1, 1);
+    // console.log("Result canEditCartProduct should be true?", canEditIsTrue);
 
-    console.log("Calling canEditCartProduct");
-    const canEditIsFalse = await canEditCartProduct(4, 1);
-    console.log("Result canEditCartProduct should be false?", canEditIsFalse);
+    // console.log("Calling canEditCartProduct");
+    // const canEditIsFalse = await canEditCartProduct(4, 1);
+    // console.log("Result canEditCartProduct should be false?", canEditIsFalse);
 
     // console.log("Calling deleteCartProduct");
     // const deletedCartProduct = await deleteCartProduct(4);

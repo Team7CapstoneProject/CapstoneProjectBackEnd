@@ -1,6 +1,5 @@
 const express = require("express");
 const {
-  attachProductsToCart,
   addProductToCart,
   createCart,
   deleteCart,
@@ -19,20 +18,21 @@ cartRouter.post("/:cart_id/products", requireUser, async (req, res, next) => {
   const { cart_id } = req.params;
   const { product_id, quantity } = req.body;
 
-  const cartArray = await getCartProductByCart(cart_id);
-  let exists = false;
-
-  cartArray.forEach((cart_product) => {
-    if (cart_product.product_id === product_id) {
-      exists = true;
-    }
-  });
   try {
+    const cartArray = await getCartProductByCart(cart_id);
+    let exists = false;
+
+    cartArray.forEach((cart_product) => {
+      if (cart_product.product_id === product_id) {
+        exists = true;
+      }
+    });
+
     if (exists) {
-      res.status(400);
+      res.status(409);
       return next({
         name: "ProductExistsInCartError",
-        message: `Product with ID ${product_id} already exists in cart with ID ${cart_id}`,
+        message: `Product with ID ${product_id} already exists in cart with ID ${cart_id}.`,
         error: "ProductExistsInCartError",
       });
     } else {
@@ -42,9 +42,9 @@ cartRouter.post("/:cart_id/products", requireUser, async (req, res, next) => {
         quantity,
       });
 
-      let cart = await getCartById(cart_id)
-
-      res.send(cart);    }
+      let cart = await getCartById(cart_id);
+      res.send(cart);
+    }
   } catch (error) {
     throw error;
   }
@@ -85,8 +85,6 @@ cartRouter.post("/:cart_id/products", requireUser, async (req, res, next) => {
 //   }
 // });
 
-
-
 //CREATES NEW CART : WORKING
 // POST /api/carts/:userId ---------------------------------------------------------
 cartRouter.post("/:user_id", async (req, res, next) => {
@@ -94,7 +92,17 @@ cartRouter.post("/:user_id", async (req, res, next) => {
 
   try {
     const cart = await createCart({ user_id });
-    res.send(cart);
+
+    if (cart) {
+      res.send(cart);
+    } else {
+      res.status(400);
+      return next({
+        name: "CreateCartError",
+        message: `Error creating cart.`,
+        error: "CreateCartError",
+      });
+    }
   } catch (error) {
     throw error;
   }
@@ -105,9 +113,26 @@ cartRouter.post("/:user_id", async (req, res, next) => {
 cartRouter.get("/myCartByEmail", requireUser, async (req, res, next) => {
   try {
     let email = req.user.email;
-    const cart = await getCartByEmail(email);
-    console.log(cart, `this is all carts by ${req.user.first_name}`);
-    res.send(cart);
+    if (email) {
+      const cart = await getCartByEmail(email);
+      if (cart) {
+        res.send(cart);
+      } else {
+        res.status(400);
+        return next({
+          name: "FetchCartError",
+          message: `Error fetching cart.`,
+          error: "FetchCartError",
+        });
+      }
+    } else {
+      res.status(401);
+      return next({
+        name: "MissingUserError",
+        message: "You must be logged in to perform this action.",
+        error: "MissingUserError",
+      });
+    }
   } catch (error) {
     throw error;
   }
@@ -117,11 +142,27 @@ cartRouter.get("/myCartByEmail", requireUser, async (req, res, next) => {
 // GET /api/carts/myCartByUserId---------------------------------------------------------
 cartRouter.get("/myCartByUserId", requireUser, async (req, res, next) => {
   try {
-    let user_id = req.user.id
-    console.log(req.user, "this is req.user")
-    const cart = await getCartsByUserId(user_id);
-    console.log(cart, `this is all carts by ${req.user.first_name}`);
-    res.send(cart);
+    let user_id = req.user.id;
+    if (user_id) {
+      const cart = await getCartsByUserId(user_id);
+      if (cart) {
+        res.send(cart);
+      } else {
+        res.status(400);
+        return next({
+          name: "FetchCartError",
+          message: `Error fetching cart.`,
+          error: "FetchCartError",
+        });
+      }
+    } else {
+      res.status(401);
+      return next({
+        name: "MissingUserError",
+        message: "You must be logged in to perform this action.",
+        error: "MissingUserError",
+      });
+    }
   } catch (error) {
     throw error;
   }
@@ -133,7 +174,16 @@ cartRouter.patch("/:cart_id", requireUser, async (req, res, next) => {
   const { cart_id } = req.params;
   try {
     let updatedCartCompletion = await updateCartCompletion(cart_id);
-    res.send(updatedCartCompletion);
+    if (updatedCartCompletion) {
+      res.send(updatedCartCompletion);
+    } else {
+      res.status(400);
+      return next({
+        name: "CompletingCartError",
+        message: `Error completing cart.`,
+        error: "CompletingCartError",
+      });
+    }
   } catch (error) {
     throw error;
   }
@@ -144,19 +194,49 @@ cartRouter.patch("/:cart_id", requireUser, async (req, res, next) => {
 cartRouter.delete("/:cartId", requireUser, async (req, res, next) => {
   const { cartId } = req.params;
 
-  let cart = await getCartById(cartId);
-  let cartOwner = cart.user_id;
-
   try {
-    if (cartOwner !== req.user.id) {
-      res.status(403);
-      next({
-        name: "OwnerUserError",
-        message: `User ${req.user.first_name} is not allowed to delete cart with ID ${cartId}`,
-      });
+    let cart = await getCartById(cartId);
+    if (cart) {
+      let cartOwner = cart[0].user_id;
+      if (cartOwner !== req.user.id) {
+        res.status(403);
+        return next({
+          name: "OwnerUserError",
+          message: `User ${req.user.first_name} is not allowed to delete cart with ID ${cartId}`,
+          error: "OwnerUserError",
+        });
+      } else {
+        await deleteCart(cartId);
+        //THE NEXT 3 LINES CAN BE DELETED IF THE PROBLEM BELOW IS RESOLVED.
+        res.send({
+          message: `Cart ${cartId} has been deleted`,
+        });
+
+        //THE NEXT FEW LINES CHECKS IF THE CART HAS BEEN DELETED.
+        //TURNS OUT THAT THE CART IS DELETED BUT BECAUSE PRODUCTS
+        //WERE ATTACHED TO IT, THE CART STILL EXISTS BUT ONLY WITH
+        //THE ARRAY OF PRODUCTS IN IT. THIS MIGHT CAUSE ISSUES LATER.
+
+        // let _cart = await getCartById(cartId);
+        // if (!_cart) {
+        //   res.send({
+        //     message: `Cart ${cartId} has been deleted`,
+        //   });
+        // } else {
+        //   return next({
+        //     name: "DeleteCartError",
+        //     message: `Failed to delete cart.`,
+        //     error: "DeleteCartError",
+        //   });
+        // }
+      }
     } else {
-      let deletedCart = await deleteCart(cartId);
-      res.send(deletedCart);
+      res.status(400);
+      return next({
+        name: "CartExistError",
+        message: `Cart does not exist`,
+        error: "CartExistError",
+      });
     }
   } catch (error) {
     throw error;

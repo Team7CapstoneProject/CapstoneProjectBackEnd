@@ -67,7 +67,8 @@ async function canEditCartProduct(cartProductId, userId) {
   try {
     const selectedCartProduct = await getCartProductById(cartProductId);
     const selectedCart = await getCartById(selectedCartProduct.cart_id);
-    const cartOwner = selectedCart.user_id;
+    //Assuming the owner only has one cart, the user_id is selected from the first(and only) cart in the cart array.
+    const cartOwner = selectedCart[0].user_id;
     if (cartOwner === userId) {
       return true;
     } else {

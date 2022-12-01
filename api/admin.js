@@ -31,10 +31,10 @@ adminRouter.post("/products", requireAdmin, async (req, res, next) => {
     const existingProduct = await getProductByName(name);
 
     if (existingProduct) {
-      res.status(400);
+      res.status(409);
       return next({
         name: "ProductExistsError",
-        message: `A product ${name} already exists`,
+        message: `A product ${name} already exists.`,
         error: "ProductExistsError",
       });
     }
@@ -74,7 +74,17 @@ adminRouter.post("/products", requireAdmin, async (req, res, next) => {
 adminRouter.get("/carts", requireAdmin, async (req, res, next) => {
   try {
     const allCarts = await getAllCarts();
-    res.send(allCarts);
+
+    if (allCarts) {
+      res.send(allCarts);
+    } else {
+      res.status(400);
+      return next({
+        name: "AllCartsError",
+        message: "Error fetching all carts.",
+        error: "AllCartsError",
+      });
+    }
   } catch (error) {
     throw error;
   }
@@ -86,7 +96,16 @@ adminRouter.get("/carts", requireAdmin, async (req, res, next) => {
 adminRouter.get("/products", requireAdmin, async (req, res, next) => {
   try {
     const allProducts = await getAllProducts();
-    res.send(allProducts);
+    if (allProducts) {
+      res.send(allProducts);
+    } else {
+      res.status(400);
+      return next({
+        name: "AllProductsError",
+        message: "Error fetching all products.",
+        error: "AllProductsError",
+      });
+    }
   } catch (error) {
     throw error;
   }
@@ -100,9 +119,10 @@ adminRouter.get("/users", requireAdmin, async (req, res, next) => {
     if (allUsers) {
       res.send(allUsers);
     } else {
+      res.status(400);
       return next({
         name: "AllUsersError",
-        message: "Failed to get all users",
+        message: "Error fetching all users.",
         error: "AllUsersError",
       });
     }
@@ -185,13 +205,15 @@ adminRouter.delete(
         if (!_product) {
           res.send({ message: `Product ${productId} was deleted.` });
         } else {
+          res.status(400);
           return next({
             name: "ProductFailedToDeleteError",
-            message: `This product failed to delete.`,
+            message: `Failed to delete product.`,
             error: "ProductFailedToDeleteError",
           });
         }
       } else {
+        res.status(400);
         return next({
           name: "ProductNotFoundError",
           message: `Product not found.`,
@@ -218,6 +240,7 @@ adminRouter.delete("/users/:userId", requireAdmin, async (req, res, next) => {
           message: `User ${userId} has been deleted`,
         });
       } else {
+        res.status(400);
         return next({
           name: "UserDeleteError",
           message: "Failed to delete user",
@@ -225,6 +248,7 @@ adminRouter.delete("/users/:userId", requireAdmin, async (req, res, next) => {
         });
       }
     } else {
+      res.status(400);
       return next({
         name: "UserNotFoundError",
         message: "This user does not exist",
