@@ -103,7 +103,7 @@ usersRouter.post("/register", async (req, res, next) => {
 
     if (_user) {
       res.send({
-        message: "Thank you for signing up.",
+        message: `Hey ${_user.first_name}! Thanks for signing up!`,
         token,
         user,
       });
