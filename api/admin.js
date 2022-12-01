@@ -151,6 +151,18 @@ adminRouter.patch(
     try {
       const product = await getProductById(productId);
 
+      console.log(name, "this is name");
+      console.log(product.name, "this is product.name");
+
+      if (product.name === name) {
+        res.status(409);
+        return next({
+          name: "ProductExistsError",
+          message: `A product ${name} already exists.`,
+          error: "ProductExistsError",
+        });
+      }
+
       if (!product) {
         res.status(400);
         next({
@@ -183,7 +195,10 @@ adminRouter.patch(
       updateFields.sale_percentage = sale_percentage;
 
       const updatedProduct = await updateProduct(productId, updateFields);
-      res.send(updatedProduct);
+      res.send({
+        message: `Product ${name} successfully posted!`,
+        updatedProduct,
+      });
     } catch (error) {
       throw error;
     }
@@ -232,14 +247,14 @@ adminRouter.delete("/users/:userId", requireAdmin, async (req, res, next) => {
   const { userId } = req.params;
   try {
     let user = await getUserById(userId);
-    delete user.password
+    delete user.password;
     if (user) {
       await deleteUser(userId);
       let _user = await getUserById(userId);
       if (!_user) {
         res.send({
           message: `User ${userId} has been deleted`,
-          user
+          user,
         });
       } else {
         res.status(400);
