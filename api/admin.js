@@ -151,9 +151,6 @@ adminRouter.patch(
     try {
       const product = await getProductById(productId);
 
-      console.log(name, "this is name");
-      console.log(product.name, "this is product.name");
-
       if (product.name === name) {
         res.status(409);
         return next({
