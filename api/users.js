@@ -144,7 +144,7 @@ usersRouter.get("/me", requireUser, async (req, res, next) => {
 //GET /api/users/:userId--------------------------------------------------------
 usersRouter.get("/:userId", async (req, res, next) => {
   const { userId } = req.params;
-  
+
   try {
     const user = await getUserById(userId);
 
