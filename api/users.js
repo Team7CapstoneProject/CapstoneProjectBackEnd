@@ -42,7 +42,7 @@ usersRouter.post("/login", async (req, res, next) => {
         expiresIn: "1w",
       });
 
-      res.send({ message: `Welcome back, ${user.name}`, token, user });
+      res.send({ message: `Welcome back, ${user.first_name}`, token, user });
       return token;
     } else {
       res.status(403);
