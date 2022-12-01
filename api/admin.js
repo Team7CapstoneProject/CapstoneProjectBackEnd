@@ -215,7 +215,7 @@ adminRouter.delete(
         await deleteProduct(productId);
         const _product = await getProductById(productId);
         if (!_product) {
-          res.send({ message: `Product ${productId} was deleted.` });
+          res.send({ message: `Product ${productId} was deleted.`, product });
         } else {
           res.status(400);
           return next({
