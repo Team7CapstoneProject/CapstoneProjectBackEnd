@@ -18,16 +18,25 @@ cartRouter.get("/:cartId/cart_products", async (req, res, next) => {
   const { cartId } = req.params;
 
   try {
-    const cartProducts = await getCartProductByCart(cartId);
-    if (cartProducts) {
-      res.send(cartProducts);
-    } else {
+    if (!cartId) {
       res.status(400);
       return next({
-        name: "FetchCartProductError",
-        message: `Error fetching cart products.`,
-        error: "FetchCartProductError",
+        name: "CartIdError",
+        message: `There is no cart id.`,
+        error: "CartIdError",
       });
+    } else {
+      const cartProducts = await getCartProductByCart(cartId);
+      if (cartProducts) {
+        res.send(cartProducts);
+      } else {
+        res.status(400);
+        return next({
+          name: "FetchCartProductError",
+          message: `Error fetching cart products.`,
+          error: "FetchCartProductError",
+        });
+      }
     }
   } catch (error) {
     throw error;
