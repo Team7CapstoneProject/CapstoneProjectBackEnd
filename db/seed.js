@@ -121,6 +121,14 @@ async function createInitialUsers() {
       is_admin: false,
 
     });
+    const guestUser = await createUser({
+      first_name: "Guest",
+      last_name: "Guest",
+      password: "guestuser",
+      email: "guestuser",
+      is_admin: false,
+
+    });
     const userForDeletion = await createUser({
       first_name: "userForDeletion",
       last_name: "userForDeletion",
