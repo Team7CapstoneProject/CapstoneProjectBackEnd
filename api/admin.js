@@ -62,7 +62,7 @@ adminRouter.post("/products", requireAdmin, async (req, res, next) => {
       sale_percentage,
     });
 
-    res.send({message: `${name} successfully posted!`, product});
+    res.send({ message: `${name} successfully posted!`, product });
   } catch (error) {
     throw error;
   }
