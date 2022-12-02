@@ -149,16 +149,8 @@ adminRouter.patch(
     } = req.body;
 
     try {
+      //Checks to see if the product exists in the first place. If not then throw error message.
       const product = await getProductById(productId);
-
-      if (product.name === name) {
-        res.status(409);
-        return next({
-          name: "ProductExistsError",
-          message: `A product ${name} already exists.`,
-          error: "ProductExistsError",
-        });
-      }
 
       if (!product) {
         res.status(400);
@@ -169,10 +161,30 @@ adminRouter.patch(
         });
       }
 
+      //Goes through all the products first and filters out the un-edited name of the product. This results in a new array with every other product that does not include itself. The reason why we're excluding itself is because the name of the product is a unique key in the database. If we don't exclude itself, then updating the product but not updating the product name will error itself out.
+      let allProducts = await getAllProducts();
+      let filteredProducts = allProducts.filter(
+        (singleProduct) => singleProduct.name !== product.name
+      );
+
+      //Goes through the filtered products and checks to see if the edited name of the product is the same as the name of an existing product. If it's the same then the product already exists and throws an error. If no error pops up, then the code proceeds.
+      filteredProducts.filter((singleProduct) => {
+        if (singleProduct.name === name) {
+          res.status(409);
+          return next({
+            name: "ProductExistsError",
+            message: `A product ${name} already exists.`,
+            error: "ProductExistsError",
+          });
+        }
+      });
+
+      //If the product is not on sale, then it sets the sale percentage to null
       if (on_sale === false) {
         sale_percentage = null;
       }
 
+      //If the product is on sale, it checks if sale percentage is within 0-100
       if (sale_percentage && (sale_percentage > 100 || sale_percentage < 0)) {
         res.status(400);
         return next({
@@ -182,6 +194,7 @@ adminRouter.patch(
         });
       }
 
+      //If no error has come up to this point, all the fields update to the new product information.
       const updateFields = {};
       updateFields.name = name;
       updateFields.description = description;
@@ -191,9 +204,10 @@ adminRouter.patch(
       updateFields.on_sale = on_sale;
       updateFields.sale_percentage = sale_percentage;
 
+      //Product updates with new information and sends a success message.
       const updatedProduct = await updateProduct(productId, updateFields);
       res.send({
-        message: `Product ${name} successfully posted!`,
+        message: `Product ${name} successfully updated!`,
         updatedProduct,
       });
     } catch (error) {
