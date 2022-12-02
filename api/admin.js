@@ -257,12 +257,13 @@ adminRouter.delete(
 adminRouter.delete("/users/:userId", requireAdmin, async (req, res, next) => {
   const { userId } = req.params;
   try {
-    let user = await getUserById(userId);
-    delete user.password;
+    const user = await getUserById(userId);
+
     if (user) {
       await deleteUser(userId);
       let _user = await getUserById(userId);
       if (!_user) {
+        delete user.password;
         res.send({
           message: `User ${userId} has been deleted`,
           user,
