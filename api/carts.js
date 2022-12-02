@@ -19,7 +19,16 @@ cartRouter.get("/:cartId/cart_products", async (req, res, next) => {
 
   try {
     const cartProducts = await getCartProductByCart(cartId);
-    res.send(cartProducts);
+    if (cartProducts) {
+      res.send(cartProducts);
+    } else {
+      res.status(400);
+      return next({
+        name: "FetchCartProductError",
+        message: `Error fetching cart products.`,
+        error: "FetchCartProductError",
+      });
+    }
   } catch (error) {
     throw error;
   }
