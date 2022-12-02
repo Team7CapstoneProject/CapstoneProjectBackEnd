@@ -16,9 +16,13 @@ const { requireUser } = require("./utils");
 //GET /api/carts/:cart_id/cart_products
 cartRouter.get("/:cartId/cart_products", async (req, res, next) => {
   const { cartId } = req.params;
-  const cartProducts = await getCartProductByCart(cartId);
 
-  res.send(cartProducts);
+  try {
+    const cartProducts = await getCartProductByCart(cartId);
+    res.send(cartProducts);
+  } catch (error) {
+    throw error;
+  }
 });
 
 //ADD PRODUCT TO CART : WORKING
