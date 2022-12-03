@@ -119,8 +119,15 @@ async function createInitialUsers() {
       password: "user",
       email: "user@gmail.com",
       is_admin: false,
-
     });
+    const guestUser = await createUser({
+      first_name: "Guest",
+      last_name: "Guest",
+      password: "guestuser",
+      email: "guestuser",
+      is_admin: false,
+    });
+
     const userForDeletion = await createUser({
       first_name: "userForDeletion",
       last_name: "userForDeletion",
@@ -143,7 +150,8 @@ async function createInitialProducts() {
       name: "Epiphone Les Paul",
       description: "The most beautiful guitar you will ever see!",
       price: 1000000.0,
-      image_url: "https://res.cloudinary.com/dd92xuflc/image/upload/v1669835778/20221130_131343_f7rbcb.jpg",
+      image_url:
+        "https://res.cloudinary.com/dd92xuflc/image/upload/v1669835778/20221130_131343_f7rbcb.jpg",
       inventory: 1,
       on_sale: true,
       sale_percentage: 20,

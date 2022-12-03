@@ -36,26 +36,33 @@ async function createUser({
 async function deleteUser(userId) {
   try {
     let cart = await getCartsByUserId(userId);
-    let cartId = cart[0].id;
+    if (cart && cart.length > 0) {
+      let cartId = cart[0].id;
 
-    await client.query(`
+      await client.query(`
       DELETE
       FROM cart_products
       WHERE cart_id=${cartId}
       RETURNING *`);
 
-    await client.query(`
+      await client.query(`
       DELETE
       from cart
       WHERE user_id=${userId}
       RETURNING *`);
 
-    await client.query(`
+      await client.query(`
       DELETE
       from users
       WHERE id=${userId}
       RETURNING *`);
-
+    } else {
+      await client.query(`
+      DELETE
+      from users
+      WHERE id=${userId}
+      RETURNING *`);
+    }
   } catch (error) {
     throw error;
   }
