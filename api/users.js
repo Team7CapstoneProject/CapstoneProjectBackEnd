@@ -195,7 +195,6 @@ usersRouter.patch("/me", requireUser, async (req, res, next) => {
   let { first_name, last_name, email } = req.body;
   try {
     const user = await getUserById(req.user.id);
-    console.log(user, "this is user");
     if (!user) {
       res.status(400);
       next({
@@ -213,7 +212,7 @@ usersRouter.patch("/me", requireUser, async (req, res, next) => {
 
       const updatedUser = await updateUser(req.user.id, updateFields);
       res.send({
-        message: `User ${updateFields.first_name} successfully promoted!`,
+        message: `User ${updateFields.first_name} successfully updated!!`,
         updatedUser,
       });
     }
