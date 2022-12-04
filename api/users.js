@@ -212,7 +212,7 @@ usersRouter.patch("/me", requireUser, async (req, res, next) => {
 
       const updatedUser = await updateUser(req.user.id, updateFields);
       res.send({
-        message: `User ${updateFields.first_name} successfully updated!!`,
+        message: `User ${updateFields.first_name} successfully updated!`,
         updatedUser,
       });
     }
