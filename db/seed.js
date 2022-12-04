@@ -113,18 +113,20 @@ async function createInitialUsers() {
       email: "admin@gmail.com",
       is_admin: true,
     });
-    const user = await createUser({
-      first_name: "user",
-      last_name: "user",
-      password: "user",
-      email: "user@gmail.com",
-      is_admin: false,
-    });
+
     const guestUser = await createUser({
       first_name: "Guest",
       last_name: "Guest",
       password: "guestuser",
       email: "guestuser",
+      is_admin: false,
+    });
+
+    const user = await createUser({
+      first_name: "user",
+      last_name: "user",
+      password: "user",
+      email: "user@gmail.com",
       is_admin: false,
     });
 
