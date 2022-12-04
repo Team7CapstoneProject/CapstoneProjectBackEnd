@@ -210,7 +210,7 @@ async function createInitialProducts() {
       description:
         "Les Paul's connection with Epiphone dates back to the after-hours work at their factory in the 1940s that led to his original Log solidbody design. Given that, it's no wonder this Les Paul Traditional Pro III is so tightly connected to that history. The Traditional Pro III is available in some cool new colors and comes packed with features that belie its price. Sustain and playability are guaranteed from its all-mahogany body and '60s profile neck. And you'll be proud of the way it looks too in the finish of your choice. Sound matters and you will be impressed by the power and versatility of the electronics found on this Epiphone Les Paul. With alnico humbuckers and coil-splitting via push/pull pots, you will be able to play any style and kick it into overdrive at the push of a knob when it's your turn to solo. If you are looking for an affordable starter electric, or a backup you can rely on at any gig, the Les Paul Traditional Pro III is a great choice. You will enjoy classic Les Paul sounds, as well as more modern tones. Case sold separately.",
       price: 600.99,
-      image_url: "https://i.imgur.com/DVetoQm.png",
+      image_url: "https://i.imgur.com/CBhhDSY.png",
       inventory: 118,
       on_sale: true,
       sale_percentage: 20,
