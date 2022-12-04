@@ -9,6 +9,7 @@ const {
   getUser,
   deleteUser,
   getUserById,
+  updateUser,
 } = require("../db");
 
 //LOGIN USER : WORKING
@@ -182,6 +183,39 @@ usersRouter.delete("/me", requireUser, async (req, res, next) => {
           error: "UserDeleteError",
         });
       }
+    }
+  } catch (error) {
+    throw error;
+  }
+});
+
+//UPDATE MY ACCOUNT : WORKING
+//PATCH /api/users/me-----------------------------------------------------
+usersRouter.patch("/me", requireUser, async (req, res, next) => {
+  let { first_name, last_name, password, email } = req.body;
+  try {
+    const user = await getUserById(req.user.id);
+    console.log(user, "this is user");
+    if (!user) {
+      res.status(400);
+      next({
+        name: "UserNotFoundError",
+        message: `User with ID ${userId} not found.`,
+        error: "UserNotFoundError",
+      });
+    } else {
+      const updateFields = {};
+      updateFields.first_name = first_name;
+      updateFields.last_name = last_name;
+      updateFields.password = password;
+      updateFields.email = email;
+      updateFields.is_admin = false;
+
+      const updatedUser = await updateUser(req.user.id, updateFields);
+      res.send({
+        message: `User ${updateFields.first_name} successfully promoted!`,
+        updatedUser,
+      });
     }
   } catch (error) {
     throw error;
