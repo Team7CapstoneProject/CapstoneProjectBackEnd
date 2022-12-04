@@ -12,6 +12,7 @@ const {
   getProductByName,
   getUserById,
   updateProduct,
+  updateUser,
 } = require("../db");
 
 //POST A PRODUCT : WORKING
@@ -124,6 +125,39 @@ adminRouter.get("/users", requireAdmin, async (req, res, next) => {
         name: "AllUsersError",
         message: "Error fetching all users.",
         error: "AllUsersError",
+      });
+    }
+  } catch (error) {
+    throw error;
+  }
+});
+
+//PROMOTE USER TO ADMIN: WORKING
+//PATCH /api/admin/user/:userId--------------------------------------------------
+adminRouter.patch("/user/:userId", requireAdmin, async (req, res, next) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await getUserById(userId);
+    if (!user) {
+      res.status(400);
+      next({
+        name: "UserNotFoundError",
+        message: `User with ID ${userId} not found.`,
+        error: "UserNotFoundError",
+      });
+    } else {
+      const updateFields = {};
+      updateFields.first_name = user.first_name;
+      updateFields.last_name = user.last_name;
+      updateFields.password = user.password;
+      updateFields.email = user.email;
+      updateFields.is_admin = true;
+
+      const promotedUser = await updateUser(userId, updateFields);
+      res.send({
+        message: `User ${user.first_name} successfully promoted!`,
+        promotedUser,
       });
     }
   } catch (error) {
