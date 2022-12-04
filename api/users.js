@@ -192,7 +192,7 @@ usersRouter.delete("/me", requireUser, async (req, res, next) => {
 //UPDATE MY ACCOUNT : WORKING
 //PATCH /api/users/me-----------------------------------------------------
 usersRouter.patch("/me", requireUser, async (req, res, next) => {
-  let { first_name, last_name, password, email } = req.body;
+  let { first_name, last_name, email } = req.body;
   try {
     const user = await getUserById(req.user.id);
     console.log(user, "this is user");
@@ -207,9 +207,9 @@ usersRouter.patch("/me", requireUser, async (req, res, next) => {
       const updateFields = {};
       updateFields.first_name = first_name;
       updateFields.last_name = last_name;
-      updateFields.password = password;
+      updateFields.password = req.user.password;
       updateFields.email = email;
-      updateFields.is_admin = false;
+      updateFields.is_admin = req.user.is_admin;
 
       const updatedUser = await updateUser(req.user.id, updateFields);
       res.send({
