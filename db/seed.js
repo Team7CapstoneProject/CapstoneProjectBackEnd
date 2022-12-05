@@ -110,7 +110,7 @@ async function createInitialUsers() {
       first_name: "Admin",
       last_name: "Admin",
       password: "admin",
-      email: "admin@gmail.com",
+      email: "admin",
       is_admin: true,
     });
 
