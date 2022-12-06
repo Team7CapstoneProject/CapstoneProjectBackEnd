@@ -340,7 +340,8 @@ async function createInitialCartProducts() {
       product_id: 1,
       quantity: 1,
     });
-    //cart 1, banjo, x1
+    //cart 1, banjo, x1.
+    
 
     const cartProduct2 = await addProductToCart({
       cart_id: 1,
@@ -503,9 +504,9 @@ async function testDB() {
     // const deletedCartProductCheck = await getCartProductByCart(4);
     // console.log("check for cartProduct deleted:", deletedCartProductCheck)
 
-    // console.log("Calling getCartProductByCart");
-    // const cartProduct = await getCartProductByCart(1);
-    // console.log("Result getCartProductByCart", cartProduct);
+    console.log("Calling getCartProductByCart");
+    const cartProduct = await getCartProductByCart(1);
+    console.log("Result getCartProductByCart", cartProduct);
 
     // console.log("Calling getCartProductById");
     // const cartByProductId = await getCartProductById(1);
