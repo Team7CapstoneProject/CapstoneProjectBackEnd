@@ -20,3 +20,6 @@ What did I do yesterday?
 What am I working on today?
 What/ if any progress preventors I may have?
 **standups will take place at beginning of day** when breakout rooms opened to discuss daily plans and objectives & **end of day** ~3:15 pm CT to discuss current progressions and accomplishments and directions for the following days
+
+
+test
