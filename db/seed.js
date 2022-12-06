@@ -57,7 +57,6 @@ async function dropTables() {
   }
 }
 
-//may need to add a category table for higher tier and link category tags to products
 async function createTables() {
   try {
     console.log("Starting to build Tables...");
@@ -504,9 +503,9 @@ async function testDB() {
     // const deletedCartProductCheck = await getCartProductByCart(4);
     // console.log("check for cartProduct deleted:", deletedCartProductCheck)
 
-    console.log("Calling getCartProductByCart");
-    const cartProduct = await getCartProductByCart(1);
-    console.log("Result getCartProductByCart", cartProduct);
+    // console.log("Calling getCartProductByCart");
+    // const cartProduct = await getCartProductByCart(1);
+    // console.log("Result getCartProductByCart", cartProduct);
 
     // console.log("Calling getCartProductById");
     // const cartByProductId = await getCartProductById(1);
