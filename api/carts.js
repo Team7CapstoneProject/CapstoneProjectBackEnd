@@ -63,14 +63,18 @@ cartRouter.post("/:cart_id/products", requireUser, async (req, res, next) => {
       res.status(409);
       return next({
         name: "ProductExistsInCartError",
-        message: `Item already exists in cart!`,
+        message: `Product with ID ${product_id} already exists in cart with ID ${cart_id}.`,
         error: "ProductExistsInCartError",
       });
     } else {
-      let addedProduct = await addProductToCart({cart_id, product_id, quantity});
+      await addProductToCart({
+        cart_id,
+        product_id,
+        quantity,
+      });
 
-      // let updatedCart = await getCartProductByCart(cart_id);
-      res.send({ message: `Item successfully added to cart!`, addedProduct });
+      let cart = await getCartById(cart_id);
+      res.send(cart);
     }
   } catch (error) {
     throw error;
