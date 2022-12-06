@@ -119,9 +119,9 @@ async function getCartProductByCart(cartId) {
     [cartId]
     );
 
-    // const cart = await attachProductsToCart(rows)
+    const cart = await attachProductsToCart(rows)
 
-    return rows;
+    return cart;
   } catch (error) {
     throw error;
   }
