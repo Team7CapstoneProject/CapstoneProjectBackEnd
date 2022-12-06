@@ -1,6 +1,6 @@
 const express = require("express");
 const adminRouter = express.Router();
-const { requireAdmin } = require("./utils");
+const { requireAdmin, requireUser } = require("./utils");
 const {
   createProduct,
   deleteProduct,
@@ -114,7 +114,7 @@ adminRouter.get("/products", requireAdmin, async (req, res, next) => {
 
 //GET ALL USERS : WORKING
 //GET /api/admin/users-----------------------------------------------------------
-adminRouter.get("/users", requireAdmin, async (req, res, next) => {
+adminRouter.get("/users", requireUser, async (req, res, next) => {
   try {
     const allUsers = await getAllUsers();
     if (allUsers) {
